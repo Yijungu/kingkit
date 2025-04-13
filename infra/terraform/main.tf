@@ -24,7 +24,7 @@ resource "aws_security_group" "rds_sg" {
 resource "aws_db_instance" "auth_db" {
   identifier         = "auth-db"
   engine             = "postgres"
-  instance_class     = "db.t4.micro"
+  instance_class     = "db.t4g.micro"
   allocated_storage  = 20
   db_name            = var.db_name
   username           = var.db_username
