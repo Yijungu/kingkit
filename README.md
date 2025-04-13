@@ -42,6 +42,26 @@ Spring 기반의 백엔드 템플릿입니다.
 
 ---
 
+## 🖼 아키텍처
+
+kingkit은 다음과 같은 구조로 운영됩니다.  
+GitHub Actions를 기반으로 Terraform 인프라 구성부터, Kubernetes 배포 및 모니터링까지 포함된 실전형 구조입니다.
+
+![kingkit Architecture](docs/architecture.png)
+
+### 구성 요소 설명
+
+| 구성 | 설명 |
+|------|------|
+| **GitHub Actions** | 코드 변경 시 자동으로 Terraform + 배포 실행 |
+| **Terraform** | AWS 인프라 구성 (RDS, S3, IAM, VPC 등) |
+| **Docker / Helm** | 컨테이너 이미지 빌드 및 K8s 배포 |
+| **Spring Boot Services** | `auth-service`, `user-service`, `gateway`, `config-server` |
+| **Monitoring** | Prometheus, Grafana, Alertmanager |
+| **RDS** | PostgreSQL 데이터베이스 (프로덕션 대응) |
+
+---
+
 ## ⚡ 빠르게 시작하기
 
 ```bash
