@@ -1,0 +1,47 @@
+# 🔧 Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+terraform.tfvars.json
+
+# 🐳 Docker
+*.log
+*.pid
+docker-compose.override.yml
+
+# 🐍 Python (scripts 있을 경우)
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+env/
+venv/
+
+# 🧪 Test / Coverage
+coverage/
+*.lcov
+*.test.js.snap
+
+# 💻 OS / IDE
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# 🔐 인증 / 키파일
+*.pem
+*.key
+*.crt
+*.jks
+*.p12
+.env
+
+# 🏗️ Node (향후 helm chart나 FE 있을 경우)
+node_modules/
+
+# 📄 GitHub Workflow Logs
+.github/workflows/*.log
