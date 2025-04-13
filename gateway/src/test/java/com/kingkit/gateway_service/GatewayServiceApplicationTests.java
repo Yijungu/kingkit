@@ -1,4 +1,4 @@
-package com.kingkit.gateway_service;
+package com.kingkit.gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

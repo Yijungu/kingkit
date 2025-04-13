@@ -1,4 +1,4 @@
-package com.kingkit.gateway_service;
+package com.kingkit.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
