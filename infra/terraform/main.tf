@@ -24,7 +24,7 @@ resource "aws_security_group" "rds_sg" {
 resource "aws_db_instance" "auth_db" {  
   identifier              = "auth-db"   
   engine                  = "postgres"
-  engine_version          = "16.1"
+  engine_version          = "17.2"
   instance_class          = "db.t4g.micro"
   allocated_storage       = 20
   db_name                 = "authdb"    
