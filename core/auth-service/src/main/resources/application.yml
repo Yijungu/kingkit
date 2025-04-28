@@ -6,15 +6,11 @@ spring:
     name: auth-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/authdb
-    username: postgres
-    password: yourpassword
+    url: jdbc:postgresql://auth-db.cxauk2qcmmjm.ap-northeast-2.rds.amazonaws.com:5432/authdb
+    username: kingkit
+    password: kingkitpass
 
   jpa:
     hibernate:
       ddl-auto: none
     show-sql: true
-
-  flyway:
-    enabled: true
-    locations: classpath:db/migration

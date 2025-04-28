@@ -1,6 +1,7 @@
 rootProject.name = "kingkit"
 
-include("services:auth-service")
-include("services:user-service")
-include("services:gateway")
+include("core:auth-service")
+include("core:user-service")
+include("examples:todo-service")
+include("gateway")
 include("shared")
