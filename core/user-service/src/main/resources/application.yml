@@ -6,9 +6,9 @@ spring:
     name: user-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/userdb
-    username: postgres
-    password: yourpassword
+    url: jdbc:postgresql://auth-db.cxauk2qcmmjm.ap-northeast-2.rds.amazonaws.com:5432/authdb
+    username: kingkit
+    password: kingkitpass
 
   jpa:
     hibernate:
