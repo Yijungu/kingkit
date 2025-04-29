@@ -1,0 +1,26 @@
+server:
+  port: 8082  # 그냥 테스트니까 포트 겹치지 않게 (중요하진 않음)
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # 테스트 끝나면 테이블 다 삭제
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+  flyway:
+    enabled: false  # 테스트에서는 굳이 마이그레이션 안 함
+
+logging:
+  level:
+    org.springframework: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

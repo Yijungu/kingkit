@@ -1,20 +1,43 @@
 server:
-  port: 8082
+  port: 8081  # user-service 따로 포트 지정 (ex: gateway가 8080 쓰니까)
 
 spring:
-  application:
-    name: user-service
-
   datasource:
-    url: jdbc:postgresql://auth-db.cxauk2qcmmjm.ap-northeast-2.rds.amazonaws.com:5432/authdb
-    username: kingkit
-    password: kingkitpass
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
+    url: jdbc:postgresql://auth-db.cxauk2qcmmjm.ap-northeast-2.rds.amazonaws.com:5432/userdb
+    username: user_service
+    password: 244589zz!!
+    driver-class-name: org.postgresql.Driver
 
   flyway:
     enabled: true
     locations: classpath:db/migration
+    baseline-on-migrate: true  # 이미 DB가 있어도 문제 없이 마이그레이션 실행
+
+  jpa:
+    hibernate:
+      ddl-auto: validate  # 테이블 자동 생성 X → 반드시 Flyway로 테이블 관리
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs  # API 명세서 JSON
+  swagger-ui:
+    path: /swagger-ui.html  # Swagger UI
+    operations-sorter: method  # HTTP 메서드(GET/POST 등) 순서대로 정렬
+    tags-sorter: alpha        # 태그 이름 알파벳 순서로 정렬
+    doc-expansion: none        # 기본 접힘 상태
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  info:
+    title: Kingkit User Service API
+    description: "User 관련 회원가입, 조회 기능을 제공하는 API 문서입니다."
+    version: v1
+
+logging:
+  level:
+    org.springframework: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
