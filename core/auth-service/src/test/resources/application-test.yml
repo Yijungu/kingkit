@@ -1,0 +1,17 @@
+server:
+  port: 8085  # 그냥 테스트용, 겹치지 않게
+
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+logging:
+  level:
+    org.springframework: INFO
+
+jwt:
+  secret: wjIxQcvXM5ZgWSnCWMxe0Loav5Wts63Hp/f01uWsj0Ixl4mG7qecuRkNEVxuVyOa84DItUhn1uXhP3NJn9mU8A==  # 32바이트 이상 Base64 인코딩
+  access-token-validity: 3600000
+  refresh-token-validity: 604800000
