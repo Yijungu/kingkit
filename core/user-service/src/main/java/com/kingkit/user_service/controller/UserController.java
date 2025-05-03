@@ -1,6 +1,7 @@
 package com.kingkit.user_service.controller;
 
 import com.kingkit.user_service.domain.User;
+import com.kingkit.user_service.dto.UserInternalDto;
 import com.kingkit.user_service.dto.UserRequestDto;
 import com.kingkit.user_service.dto.UserResponseDto;
 import com.kingkit.user_service.service.UserService;
@@ -47,4 +48,14 @@ public class UserController {
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
         return ResponseEntity.ok(new UserResponseDto(user));
     }
+
+    @Operation(summary = "[Internal] 이메일로 회원 조회 (비밀번호 포함)", 
+           description = "Feign 등 내부 시스템에서 이메일로 회원 정보를 가져올 때 사용합니다. 비밀번호가 포함됩니다.")
+    @GetMapping("/internal/email")
+    public ResponseEntity<UserInternalDto> getUserInternalByEmail(@RequestParam String email) {
+        User user = userService.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
+        return ResponseEntity.ok(new UserInternalDto(user));
+    }
+
 }

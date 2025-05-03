@@ -1,16 +1,22 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
   application:
     name: auth-service
 
-  datasource:
-    url: jdbc:postgresql://auth-db.cxauk2qcmmjm.ap-northeast-2.rds.amazonaws.com:5432/authdb
-    username: postgres
-    password: 244589zz!!
+jwt:
+  secret: wjIxQcvXM5ZgWSnCWMxe0Loav5Wts63Hp/f01uWsj0Ixl4mG7qecuRkNEVxuVyOa84DItUhn1uXhP3NJn9mU8A==  # 32바이트 이상 Base64 인코딩
+  access-token-validity: 3600000          # 1h  = 3 600 000 ms
+  refresh-token-validity: 604800000       # 7d ≈ 604 800 000 ms
 
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
+
+user-service:
+  url: http://localhost:8081  # 예시: FeignClient base URL

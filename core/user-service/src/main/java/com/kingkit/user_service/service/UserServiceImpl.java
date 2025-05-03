@@ -1,7 +1,6 @@
 package com.kingkit.user_service.service;
 
 import com.kingkit.user_service.domain.User;
-import com.kingkit.user_service.dto.UserRequestDto;
 import com.kingkit.user_service.exception.DuplicateEmailException;
 import com.kingkit.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
