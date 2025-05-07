@@ -25,6 +25,10 @@ public class ExternalUserServiceImpl implements ExternalUserService {
             throw new DuplicateEmailException("이미 사용 중인 이메일입니다: " + email);
         }
 
+        if (userRepository.existsByEmail(email)) {
+            throw new DuplicateEmailException("이미 사용 중인 이메일입니다.");
+        }
+
         String encodedPassword = passwordEncoder.encode(password);
 
         User user = User.builder()
