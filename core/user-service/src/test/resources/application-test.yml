@@ -29,3 +29,13 @@ jwt:
   secret: ${JWT_SECRET}
   access-token-validity: 3600000
   refresh-token-validity: 604800000
+
+internal:
+  api-keys: 
+    - testkey-1234
+  allowed-ips:
+    - 127.0.0.1
+    - "::1"
+    - 192.168.0.10
+    - 172.30.1.25
+    - 0:0:0:0:0:0:0:1

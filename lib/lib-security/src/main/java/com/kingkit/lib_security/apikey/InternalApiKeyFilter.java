@@ -55,11 +55,12 @@ public class InternalApiKeyFilter extends OncePerRequestFilter {
             res.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal API-Key not configured");
             return;
         }
-        if (!apiKeys.contains(key)) {
+        if (key == null || !apiKeys.contains(key)) {
             log.warn("❌ 잘못된 키. IP={} key={}", requestIp, mask(key));
             res.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid Internal API-Key");
             return;
         }
+        
         if (allowedIps != null && !allowedIps.isEmpty() && !allowedIps.contains(requestIp)) {
             log.warn("❌ 허용되지 않은 IP. IP={}", requestIp);
             res.sendError(HttpStatus.FORBIDDEN.value(), "Access denied from IP: " + requestIp);
