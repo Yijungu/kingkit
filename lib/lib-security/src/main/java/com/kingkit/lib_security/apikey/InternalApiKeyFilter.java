@@ -49,8 +49,6 @@ public class InternalApiKeyFilter extends OncePerRequestFilter {
         String requestIp = normalizeIp(req.getRemoteAddr());   // ★
         String key       = req.getHeader(HEADER_NAME);
 
-        log.debug("✅ InternalApiKeyFilter 실행 - IP={}, URI={}", requestIp, req.getRequestURI());
-
         /* 1) 키/아이피 검증 -------------------------------------------------- */
         if (apiKeys == null || apiKeys.isEmpty()) {
             log.error("❌ API-Key 미설정. IP={}", requestIp);

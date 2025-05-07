@@ -46,6 +46,4 @@ dependencies {
     implementation(project(":lib:lib-security"))
 
     implementation("org.flywaydb:flyway-core")
-
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
 }
