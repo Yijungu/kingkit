@@ -13,23 +13,20 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserServiceImpl implements UserService {
+public class ExternalUserServiceImpl implements ExternalUserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // ✅ 추가
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public User registerUser(String email, String password, String nickname, String profileImageUrl) {
-        // ✅ 1. 이메일 중복 검사
         if (userRepository.findByEmail(email).isPresent()) {
             throw new DuplicateEmailException("이미 사용 중인 이메일입니다: " + email);
         }
 
-        // ✅ 2. 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(password);
 
-        // ✅ 3. User 생성 및 저장
         User user = User.builder()
                 .email(email)
                 .password(encodedPassword)
@@ -43,11 +40,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
-    }
-
-    @Override
-    public Optional<User> findByNickname(String nickname) {
-        return userRepository.findByNickname(nickname);
     }
 
     @Override

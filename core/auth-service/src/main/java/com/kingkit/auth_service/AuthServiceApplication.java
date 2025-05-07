@@ -5,7 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+    "com.kingkit.auth_service",
+    "com.kingkit.lib_security" // ⬅️ 추가
+})
 @ConfigurationPropertiesScan
 @EnableFeignClients(basePackages = "com.kingkit.auth_service.feign")
 public class AuthServiceApplication {

@@ -18,14 +18,19 @@ subprojects {
     tasks.withType<Test> { useJUnitPlatform() }
 
     if (project.file("src/main").exists()) {
-        apply(plugin = "org.springframework.boot")             // 버전은 루트에서 상속
-        extensions.configure<JavaPluginExtension> {
-            toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+        // Boot 플러그인은 애플리케이션 모듈에만
+        if (project.name !in listOf("lib-security")) {
+            apply(plugin = "org.springframework.boot")
+            extensions.configure<JavaPluginExtension> {
+                toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+            }
+            dependencies {
+                add("implementation", "org.springframework.boot:spring-boot-starter")
+            }
         }
-        dependencies {
-            add("implementation", "org.springframework.boot:spring-boot-starter")
-        }
+        // ✅ 라이브러리 모듈(lib-security)은 jar 빌드 그대로 활성
     } else {
+        // 진짜 테스트 전용 모듈만 jar 끔
         tasks.matching { it.name == "bootJar" || it.name == "jar" }
             .configureEach { enabled = false }
     }

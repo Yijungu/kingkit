@@ -15,6 +15,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("com.h2database:h2")
 
     /* JWT */
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
@@ -37,4 +40,12 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+
+    implementation(project(":lib:lib-security"))
+
+    implementation("org.flywaydb:flyway-core")
+
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 }

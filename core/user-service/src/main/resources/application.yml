@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://auth-db.cxauk2qcmmjm.ap-northeast-2.rds.amazonaws.com:5432/userdb
-    username: user_service
-    password: 244589zz!!
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   flyway:
@@ -40,3 +40,29 @@ logging:
     org.springframework: INFO
     org.hibernate.SQL: INFO
     org.hibernate.type.descriptor.sql.BasicBinder: INFO
+
+internal:
+  api-keys: 
+    - ${INTERNAL_API_KEYS}
+  allowed-ips:
+    - 127.0.0.1
+    - "::1"
+    - 192.168.0.10
+    - 172.30.1.25
+    - 0:0:0:0:0:0:0:1
+  
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-validity: 3600000
+  refresh-token-validity: 604800000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans
+  endpoint:
+    health:
+      show-details: always
+  security:
+    enabled: false  
