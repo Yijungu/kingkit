@@ -6,6 +6,8 @@ import com.kingkit.user_service.dto.UserResponseDto;
 import com.kingkit.user_service.service.ExternalUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +31,10 @@ public class ExternalUserController {
                 request.getNickname(),
                 request.getProfileImageUrl()
         );
-        return ResponseEntity.ok(new UserResponseDto(user));
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(new UserResponseDto(user));
+
     }
 
     @Operation(summary = "이메일로 회원 조회", description = "이메일을 이용해 회원 정보를 조회합니다.")

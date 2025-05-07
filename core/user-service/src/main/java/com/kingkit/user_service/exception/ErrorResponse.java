@@ -1,11 +1,18 @@
 package com.kingkit.user_service.exception;
 
-import lombok.Builder;
-import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
-@Getter
+import lombok.Builder;
+
+
 @Builder
-public class ErrorResponse {
-    private final int status;
-    private final String message;
+public record ErrorResponse(int status, String code, String message) {
+    public static ErrorResponse of(HttpStatus status, String code, String message) {
+        return new ErrorResponse(status.value(), code, message);
+    }
+
+    public static ErrorResponse of(HttpStatus status, String message) {
+        return new ErrorResponse(status.value(), null, message);
+    }
 }
+
