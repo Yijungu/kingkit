@@ -22,7 +22,7 @@ public class InternalUserServiceImpl implements InternalUserService {
 
     @Override
     public boolean existsByEmail(String email) {
-        return userRepository.findByEmail(email).isPresent();
+        return userRepository.existsByEmail(email);
     }
 
     @Override
