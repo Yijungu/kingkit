@@ -1,25 +1,20 @@
-package com.kingkit.auth_service.jwt;
+package com.kingkit.lib_security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+
 import java.security.Key;
 import java.util.Date;
 
-@Slf4j
-@Component
-@RequiredArgsConstructor          // props 주입
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    private final JwtProperties props; // ✅ 설정 객체 주입
+    private final JwtProperties props;
     private Key signingKey;
 
-    /* ===== 초기화 ===== */
     @PostConstruct
     private void init() {
         byte[] keyBytes = Decoders.BASE64.decode(props.secret());
@@ -47,13 +42,11 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    /* ===== 토큰 검증 & 정보 추출 ===== */
     public boolean isTokenValid(String token) {
         try {
             parseClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            log.debug("Invalid JWT token: {}", e.getMessage());
             return false;
         }
     }
@@ -69,9 +62,9 @@ public class JwtTokenProvider {
 
     private Claims parseClaims(String token) {
         return Jwts.parserBuilder()
-                   .setSigningKey(signingKey)
-                   .build()
-                   .parseClaimsJws(token)
-                   .getBody();
+                .setSigningKey(signingKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

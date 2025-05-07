@@ -4,11 +4,20 @@ import com.kingkit.auth_service.feign.dto.UserDto;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "user-service", url = "${user-service.url}")  // yml로 주소 설정
 public interface UserClient {
 
-    @GetMapping("/users/internal/email")
+    @GetMapping("/internal/users/email")
     UserDto getUserByEmail(@RequestParam("email") String email);
+
+    @GetMapping("/internal/users/exists")
+    Boolean existsByEmail(@RequestParam("email") String email);
+
+    @PostMapping("/internal/users/oauth")
+    UserDto createOAuthUser(@RequestParam("email") String email,
+                            @RequestParam("nickname") String nickname,
+                            @RequestParam("provider") String provider);
 }

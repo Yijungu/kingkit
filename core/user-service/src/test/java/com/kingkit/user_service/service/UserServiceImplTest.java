@@ -28,7 +28,7 @@ public class UserServiceImplTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private UserServiceImpl userService;
+    private ExternalUserServiceImpl userService;
 
     @BeforeEach
     void setUp() {

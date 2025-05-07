@@ -1,9 +1,10 @@
 package com.kingkit.user_service.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kingkit.user_service.controller.external.ExternalUserController;
 import com.kingkit.user_service.domain.User;
 import com.kingkit.user_service.dto.UserRequestDto;
-import com.kingkit.user_service.service.UserService;
+import com.kingkit.user_service.service.ExternalUserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(ExternalUserController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
 
@@ -28,7 +29,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService userService;
+    private ExternalUserService userService;
 
     @Autowired
     private ObjectMapper objectMapper;
