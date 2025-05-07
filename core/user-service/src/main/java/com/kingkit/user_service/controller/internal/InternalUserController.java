@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/internal/users")
 @Tag(name = "Internal API", description = "내부 시스템 연동 전용 API")
 @RequiredArgsConstructor
-public class UserInternalController {
+public class InternalUserController {
 
     private final InternalUserService userService;
 
