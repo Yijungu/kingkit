@@ -23,7 +23,8 @@ public class JwtConfig {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
-        return new JwtAuthenticationFilter(jwtTokenProvider);
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider,
+                                                            JwtAuthenticationEntryPoint entryPoint) {
+        return new JwtAuthenticationFilter(jwtTokenProvider, entryPoint);
     }
 }
