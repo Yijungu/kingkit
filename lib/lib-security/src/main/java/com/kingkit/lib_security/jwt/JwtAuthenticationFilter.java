@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,6 +18,7 @@ import java.util.Collections;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
+    private final JwtAuthenticationEntryPoint entryPoint; // ✅ 추가
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -25,19 +28,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = resolveToken(request);
 
-        if (token != null && tokenProvider.isTokenValid(token)) {
-            String userId = tokenProvider.getUserId(token);
-            String role = tokenProvider.getRole(token);
+        if (token != null) {
+            if (tokenProvider.isTokenValid(token)) {
+                String userId = tokenProvider.getUserId(token);
+                String role = tokenProvider.getRole(token);
 
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userId, null,
-                            Collections.singleton(() -> role)); // 권한 포함
+                var auth = new UsernamePasswordAuthenticationToken(
+                        userId, null, Collections.singleton(() -> role)
+                );
+                SecurityContextHolder.getContext().setAuthentication(auth);
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                // ✅ 유효하지 않은 토큰이면 entryPoint 호출
+                entryPoint.commence(request, response,
+                        new BadCredentialsException("Invalid JWT token"));
+                return;
+            }
         }
 
         filterChain.doFilter(request, response);
     }
+
 
     private String resolveToken(HttpServletRequest request) {
         String bearer = request.getHeader("Authorization");
