@@ -10,6 +10,9 @@ import com.kingkit.auth_service.exception.UsernameNotFoundException;
 import com.kingkit.auth_service.feign.UserClient;
 import com.kingkit.auth_service.feign.dto.UserDto;
 import com.kingkit.lib_security.jwt.JwtTokenProvider;
+
+import feign.FeignException;
+
 import com.kingkit.auth_service.repository.RefreshTokenRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,18 +30,16 @@ public class AuthServiceImpl implements AuthService {
 
    @Override
     public LoginResponseDto login(LoginRequestDto request) {
-        // 1. user-service API 호출
-        UserDto user = userClient.getUserByEmail(request.getEmail());
-
-        if (user == null) {
+        UserDto user;
+        try {
+            user = userClient.getUserByEmail(request.getEmail());
+        } catch (FeignException.NotFound e) {
             throw new UsernameNotFoundException("해당 이메일의 유저를 찾을 수 없습니다: " + request.getEmail());
         }
 
-        // 2. 비밀번호 수동 검증
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new PasswordMismatchException();
         }
-
         // 3. 토큰 발급
         String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getRole());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
