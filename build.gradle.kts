@@ -19,7 +19,7 @@ subprojects {
 
     if (project.file("src/main").exists()) {
         // Boot 플러그인은 애플리케이션 모듈에만
-        if (project.name !in listOf("lib-security")) {
+        if (project.name !in listOf("lib-security", "lib-test-support")) {
             apply(plugin = "org.springframework.boot")
             extensions.configure<JavaPluginExtension> {
                 toolchain.languageVersion.set(JavaLanguageVersion.of(17))

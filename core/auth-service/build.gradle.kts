@@ -46,4 +46,5 @@ dependencies {
     implementation(project(":lib:lib-security"))
 
     implementation("org.flywaydb:flyway-core")
+    testImplementation(project(":lib:lib-test-support"))
 }
