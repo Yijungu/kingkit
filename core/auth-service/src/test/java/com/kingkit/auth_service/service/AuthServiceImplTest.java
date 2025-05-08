@@ -10,6 +10,9 @@ import com.kingkit.auth_service.feign.dto.UserDto;
 import com.kingkit.auth_service.repository.RefreshTokenRepository;
 import com.kingkit.lib_security.jwt.JwtTokenProvider;
 
+import feign.FeignException;
+import feign.Request;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,9 +20,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
 class AuthServiceImplTest {
@@ -57,7 +62,14 @@ class AuthServiceImplTest {
 
     @Test
     void login_이메일없음_예외() {
-        given(userClient.getUserByEmail("no@email.com")).willReturn(null);
+        // FeignException.NotFound 인스턴스를 만들어서 던지기
+        FeignException notFoundException = new FeignException.NotFound(
+            "404 Not Found",
+            Request.create(Request.HttpMethod.GET, "/internal/users/email", Map.of(), null, null, null),
+            null, null
+        );
+
+        given(userClient.getUserByEmail("no@email.com")).willThrow(notFoundException);
 
         assertThatThrownBy(() -> authService.login(new LoginRequestDto("no@email.com", "pwd")))
                 .isInstanceOf(UsernameNotFoundException.class);
