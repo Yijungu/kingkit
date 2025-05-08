@@ -16,6 +16,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage") // vintage 제외
     }
+    implementation("com.fasterxml.jackson.core:jackson-databind") 
     implementation("org.assertj:assertj-core:3.24.2")
     implementation("org.mockito:mockito-core:5.12.0")
     implementation("org.springframework.security:spring-security-test:6.2.1")
