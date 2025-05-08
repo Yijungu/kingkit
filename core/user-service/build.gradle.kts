@@ -13,4 +13,6 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")	
 	implementation(project(":lib:lib-security"))
+
+	testImplementation(project(":lib:lib-test-support"))
 }

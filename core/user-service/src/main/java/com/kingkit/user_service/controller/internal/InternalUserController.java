@@ -38,12 +38,12 @@ public class InternalUserController {
     }
 
     @PostMapping("/oauth")
-    public ResponseEntity<UserResponseDto> createOAuthUser(
+    public ResponseEntity<UserInternalDto> createOAuthUser(
             @RequestParam String email,
             @RequestParam String nickname,
             @RequestParam(required = false) String provider
     ) {
         User user = userService.registerOAuthUser(email, nickname);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponseDto(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new UserInternalDto(user));
     }
 }
