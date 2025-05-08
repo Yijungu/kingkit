@@ -1,8 +1,13 @@
-package com.kingkit.testsupport.util;
+package com.kingkit.lib_test_support.testsupport.util;
 
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+import org.springframework.http.MediaType;
 
 public class MockRequestBuilder {
 
@@ -18,5 +23,16 @@ public class MockRequestBuilder {
                 .contentType("application/json");
     }
 
-    // 다른 메서드들도 필요에 따라 추가 가능
+    public static MockHttpServletRequestBuilder postJson(String url, Object body, ObjectMapper objectMapper) throws Exception {
+        return MockMvcRequestBuilders
+                .post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(body));
+    }
+
+    public static MockHttpServletRequestBuilder getJson(String url, ObjectMapper objectMapper) {
+        return MockMvcRequestBuilders
+                .get(url)
+                .accept(MediaType.APPLICATION_JSON);
+    }
 }

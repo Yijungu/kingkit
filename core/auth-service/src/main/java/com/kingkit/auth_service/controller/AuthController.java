@@ -34,7 +34,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     @Operation(summary = "로그아웃", description = "Refresh Token을 무효화합니다.")
-    public ResponseEntity<Void> logout(@RequestParam String email) {
+    public ResponseEntity<Void> logout(@Valid @RequestParam String email) {
         authService.logout(email);
         return ResponseEntity.ok().build();
     }
