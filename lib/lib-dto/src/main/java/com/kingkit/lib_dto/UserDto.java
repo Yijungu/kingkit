@@ -16,4 +16,7 @@ public class UserDto {
     private String role;
     private String nickname;
     private String profileImageUrl;
+
 }
+
+
