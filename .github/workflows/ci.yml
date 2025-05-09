@@ -1,50 +1,64 @@
 name: CI
 
-# ───────────────────────── 트리거 ─────────────────────────
 on:
   push:
     branches: [ main, develop ]
   pull_request:
     branches: [ "**" ]
 
-# ───────────────────────── Job 정의 ──────────────────────
 jobs:
   build-test:
     runs-on: ubuntu-latest
 
-    # JDK 17(= 프로젝트 기본), 필요 시 매트릭스 확장 가능
     strategy:
       matrix:
         java: [ 17 ]
 
+    env:
+      # ───── AuthService용 환경변수 ─────
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+      NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+      NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+
+      AUTH_DB_HOST: ${{ secrets.AUTH_DB_HOST }}
+      AUTH_DB_PORT: ${{ secrets.AUTH_DB_PORT }}
+      AUTH_DB_USERNAME: ${{ secrets.AUTH_DB_USERNAME }}
+      AUTH_DB_PASSWORD: ${{ secrets.AUTH_DB_PASSWORD }}
+
+      USER_SERVICE_URL: ${{ secrets.USER_SERVICE_URL }}
+      INTERNAL_API_KEYS: ${{ secrets.INTERNAL_API_KEYS }}
+
+      # ───── UserService용 환경변수 (접두사 SPRING_) ─────
+      SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+      SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+      SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+
     steps:
-      # 1) 코드 가져오기
-      - name: Check out sources
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      # 2) JDK 설정 + 캐시
       - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
-          cache: gradle            # → ~/.gradle 캐싱
+          cache: gradle
 
-      # 3) Gradle Wrapper 권한 부여
-      - name: Grant execute permission for Gradle wrapper
+      - name: Grant permission to Gradle wrapper
         run: chmod +x gradlew
 
-      # 4) 빌드 & 테스트
-      - name: Build with Gradle
+      - name: Build and test
         run: ./gradlew clean build --no-daemon
 
-      # 5) (선택) 테스트 리포트 아카이빙 - 실패 원인 확인용
-      - name: Upload Test Reports
-        if: failure()              # 빌드 실패시에만
+      - name: Upload test reports (on failure)
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: |
             **/build/reports/tests/test
             **/build/reports/spotbugs
-          retention-days: 7
