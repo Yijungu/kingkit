@@ -17,9 +17,13 @@ subprojects {
 
     tasks.withType<Test> { useJUnitPlatform() }
 
+    // ── 라이브러리 모듈 판별 ───────────────────────────
+    val isLibrary = project.path.startsWith(":lib")
+    // ❶ Boot 적용은 라이브러리가 아닐 때만
+
     if (project.file("src/main").exists()) {
         // Boot 플러그인은 애플리케이션 모듈에만
-        if (project.name !in listOf("lib-security", "lib-test-support")) {
+        if (!isLibrary) {
             apply(plugin = "org.springframework.boot")
             extensions.configure<JavaPluginExtension> {
                 toolchain.languageVersion.set(JavaLanguageVersion.of(17))

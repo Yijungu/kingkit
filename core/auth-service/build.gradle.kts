@@ -48,3 +48,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     testImplementation(project(":lib:lib-test-support"))
 }
+
+tasks.withType<Test> {
+        useJUnitPlatform()
+        systemProperty("spring.profiles.active", "test")   // ★ 핵심 한 줄
+}

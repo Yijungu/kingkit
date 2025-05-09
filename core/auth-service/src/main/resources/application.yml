@@ -2,9 +2,6 @@ server:
   port: 8082
 
 spring:
-  application:
-    name: auth-service
-
   datasource:
     url: ${AUTH_DB_HOST}:${AUTH_DB_PORT}/authdb
     username: ${AUTH_DB_USERNAME}
