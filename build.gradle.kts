@@ -35,10 +35,11 @@ subprojects {
                 html.required.set(true)
             }
 
-            val classes = fileTree("${buildDir}/classes/java/main").files +
-                          fileTree("${buildDir}/classes/kotlin/main").files
-
-            classDirectories.setFrom(files(classes))
+            classDirectories.setFrom(
+            fileTree("${buildDir}/classes") {
+                include("**/*.class")
+            }
+)
             executionData.setFrom(fileTree(buildDir).include("jacoco/test.exec"))
             sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
         }
