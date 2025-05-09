@@ -35,7 +35,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build and test
-        run: ./gradlew clean build --no-daemon
+        run: ./gradlew clean build jacocoTestReport --no-daemon
 
       - name: Upload test reports (on failure)
         if: failure()
@@ -45,3 +45,12 @@ jobs:
           path: |
             **/build/reports/tests/test
             **/build/reports/spotbugs
+            **/build/reports/jacoco/test
+
+      # ✅ 커버리지 리포트 HTML을 항상 확인하고 싶다면 (성공/실패 관계없이)
+      # - name: Upload JaCoCo coverage reports
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: coverage-reports
+      #     path: '**/build/reports/jacoco/test'

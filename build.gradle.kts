@@ -15,14 +15,38 @@ subprojects {
     apply(plugin = "java")
     apply(plugin = "io.spring.dependency-management")
 
-    tasks.withType<Test> { useJUnitPlatform() }
+    // ✅ JaCoCo 적용 조건 (테스트 디렉토리가 있는 경우에만)
+    if (project.file("src/test").exists()) {
+        apply(plugin = "jacoco")
 
-    // ── 라이브러리 모듈 판별 ───────────────────────────
+        tasks.named<Test>("test") {
+            useJUnitPlatform()
+            extensions.configure<JacocoTaskExtension> {
+                isIncludeNoLocationClasses = true
+                excludes = listOf("jdk.internal.*")
+            }
+        }
+
+        tasks.register<JacocoReport>("jacocoTestReport") {
+            dependsOn("test")
+
+            reports {
+                xml.required.set(true)
+                html.required.set(true)
+            }
+
+            val classes = fileTree("${buildDir}/classes/java/main").files +
+                          fileTree("${buildDir}/classes/kotlin/main").files
+
+            classDirectories.setFrom(files(classes))
+            executionData.setFrom(fileTree(buildDir).include("jacoco/test.exec"))
+            sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
+        }
+    }
+
+    // 기존 설정 유지
     val isLibrary = project.path.startsWith(":lib")
-    // ❶ Boot 적용은 라이브러리가 아닐 때만
-
     if (project.file("src/main").exists()) {
-        // Boot 플러그인은 애플리케이션 모듈에만
         if (!isLibrary) {
             apply(plugin = "org.springframework.boot")
             extensions.configure<JavaPluginExtension> {
@@ -32,9 +56,7 @@ subprojects {
                 add("implementation", "org.springframework.boot:spring-boot-starter")
             }
         }
-        // ✅ 라이브러리 모듈(lib-security)은 jar 빌드 그대로 활성
     } else {
-        // 진짜 테스트 전용 모듈만 jar 끔
         tasks.matching { it.name == "bootJar" || it.name == "jar" }
             .configureEach { enabled = false }
     }
