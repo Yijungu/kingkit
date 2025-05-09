@@ -1,5 +1,7 @@
 package com.kingkit.auth_service.domain;
 
+import java.util.Objects;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,14 +12,17 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class RefreshToken {
-
     @Id
-    private String email; // 유저 식별자 (이메일)
-
-    @Column(nullable = false, length = 1000)
+    private String email;
     private String token;
+    private String role;
 
     public void update(String newToken) {
         this.token = newToken;
     }
+
+    public boolean isTokenMatch(String providedToken) {
+        return Objects.equals(this.token, providedToken);
+    }
 }
+

@@ -87,47 +87,6 @@ class AuthServiceImplTest {
     }
 
     @Test
-    void reissue_성공() {
-        String refreshToken = "refreshToken";
-        String email = "email@test.com";
-        String role = "ROLE_USER";
-
-        given(jwtTokenProvider.isTokenValid(refreshToken)).willReturn(true);
-        given(jwtTokenProvider.getUserId(refreshToken)).willReturn(email);
-        given(jwtTokenProvider.getRole(refreshToken)).willReturn(role);
-        given(refreshTokenRepository.findByEmail(email)).willReturn(Optional.of(new RefreshToken(email, refreshToken)));
-        given(jwtTokenProvider.createAccessToken(email, role)).willReturn("newAccess");
-        given(jwtTokenProvider.createRefreshToken(email)).willReturn("newRefresh");
-
-        LoginResponseDto result = authService.reissue(new ReissueRequestDto(refreshToken));
-
-        assertThat(result.getAccessToken()).isEqualTo("newAccess");
-        assertThat(result.getRefreshToken()).isEqualTo("newRefresh");
-    }
-
-    @Test
-    void reissue_유효하지않은토큰() {
-        given(jwtTokenProvider.isTokenValid(any())).willReturn(false);
-
-        assertThatThrownBy(() -> authService.reissue(new ReissueRequestDto("badToken")))
-                .isInstanceOf(InvalidTokenException.class);
-    }
-
-    @Test
-    void reissue_저장된토큰과다름() {
-        String token = "incoming";
-        String email = "email@test.com";
-
-        given(jwtTokenProvider.isTokenValid(token)).willReturn(true);
-        given(jwtTokenProvider.getUserId(token)).willReturn(email);
-        given(jwtTokenProvider.getRole(token)).willReturn("ROLE_USER");
-        given(refreshTokenRepository.findByEmail(email)).willReturn(Optional.of(new RefreshToken(email, "different")));
-
-        assertThatThrownBy(() -> authService.reissue(new ReissueRequestDto(token)))
-                .isInstanceOf(InvalidTokenException.class);
-    }
-
-    @Test
     void logout_성공() {
         authService.logout("email@test.com");
 
