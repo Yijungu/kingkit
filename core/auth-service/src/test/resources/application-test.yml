@@ -1,17 +1,22 @@
+# src/test/resources/application-test.yml
 server:
-  port: 8085  # 그냥 테스트용, 겹치지 않게
+  port: 0                # 임의 포트
 
 spring:
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+  datasource:
+    url: jdbc:h2:mem:auth;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none      # DDL 은 Flyway 대신 엔티티 스캔으로
+  flyway:
+    enabled: false        # ← 핵심!  테스트에서 마이그레이션 검증 생략
 
-logging:
-  level:
-    org.springframework: INFO
+logging.level.org.springframework: INFO
 
 jwt:
-  secret: wjIxQcvXM5ZgWSnCWMxe0Loav5Wts63Hp/f01uWsj0Ixl4mG7qecuRkNEVxuVyOa84DItUhn1uXhP3NJn9mU8A==  # 32바이트 이상 Base64 인코딩
+  secret: TEST_SECRET_KEY_SHOULD_BE_LONG_ENOUGH_FOR_HMAC
   access-token-validity: 3600000
   refresh-token-validity: 604800000
