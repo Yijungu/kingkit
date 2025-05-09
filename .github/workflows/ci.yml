@@ -15,27 +15,10 @@ jobs:
         java: [ 17 ]
 
     env:
-      # ───── AuthService용 환경변수 ─────
+      SPRING_PROFILES_ACTIVE: test
+
+      # 1) Auth-service용 (JWT 같은 건 필요)
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
-
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-      KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
-      NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
-      NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
-
-      AUTH_DB_HOST: ${{ secrets.AUTH_DB_HOST }}
-      AUTH_DB_PORT: ${{ secrets.AUTH_DB_PORT }}
-      AUTH_DB_USERNAME: ${{ secrets.AUTH_DB_USERNAME }}
-      AUTH_DB_PASSWORD: ${{ secrets.AUTH_DB_PASSWORD }}
-
-      USER_SERVICE_URL: ${{ secrets.USER_SERVICE_URL }}
-      INTERNAL_API_KEYS: ${{ secrets.INTERNAL_API_KEYS }}
-
-      # ───── UserService용 환경변수 (접두사 SPRING_) ─────
-      SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
-      SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
-      SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
 
     steps:
       - name: Checkout source
