@@ -35,7 +35,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build and test
-        run: ./gradlew clean build --no-daemon
+        run: ./gradlew clean build jacocoTestReport --no-daemon
 
       - name: Upload test reports (on failure)
         if: failure()
@@ -45,3 +45,11 @@ jobs:
           path: |
             **/build/reports/tests/test
             **/build/reports/spotbugs
+            **/build/reports/jacoco/test
+
+      - name: Upload JaCoCo coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: '**/build/reports/jacoco/test/html'
