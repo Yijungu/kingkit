@@ -1,22 +1,50 @@
-# src/test/resources/application-test.yml
 server:
-  port: 0                # 임의 포트
+  port: 0               # 테스트용, 임의 포트
 
 spring:
   datasource:
-    url: jdbc:h2:mem:auth;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:authdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
   jpa:
     hibernate:
-      ddl-auto: none      # DDL 은 Flyway 대신 엔티티 스캔으로
-  flyway:
-    enabled: false        # ← 핵심!  테스트에서 마이그레이션 검증 생략
+      ddl-auto: create-drop   # 테스트 후 자동 삭제
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
 
-logging.level.org.springframework: INFO
+  flyway:
+    enabled: false           # ✅ 핵심 – 마이그레이션 검증 끔
+
+logging.level:
+  org.springframework: INFO
+  org.hibernate.SQL: DEBUG
+  org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 jwt:
-  secret: TEST_SECRET_KEY_SHOULD_BE_LONG_ENOUGH_FOR_HMAC
+  secret: SQUvA1BPEM9yH6VdYl+d6ivRse1RJA0ig7QQL4G4YIs=
   access-token-validity: 3600000
   refresh-token-validity: 604800000
+
+# ↓ OAuth/Feign 등 운영 placeholder가 테스트에 영향 주지 않도록 dummy 값 지정
+security:
+  oauth2:
+    client:
+      registration:
+        google:
+          client-id: dummy
+          client-secret: dummy
+      provider:
+        google: {}    # 빈 값이라도 두면 placeholder 해소
+
+user-service:
+  url: http://localhost:0   # 실제 호출 안 하므로 dummy
+
+internal:
+  api-keys:
+    - testkey-1234
+  allowed-ips:
+    - 127.0.0.1
+    - "::1"
