@@ -27,7 +27,7 @@ subprojects {
             }
         }
 
-        tasks.register<JacocoReport>("jacocoTestReport") {
+        tasks.named<JacocoReport>("jacocoTestReport") {
             dependsOn("test")
 
             reports {
