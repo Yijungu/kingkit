@@ -8,7 +8,7 @@ import com.kingkit.auth_service.exception.InvalidTokenException;
 import com.kingkit.auth_service.exception.PasswordMismatchException;
 import com.kingkit.auth_service.exception.UsernameNotFoundException;
 import com.kingkit.auth_service.feign.UserClient;
-import com.kingkit.auth_service.feign.dto.UserDto;
+import com.kingkit.lib_dto.UserDto;
 import com.kingkit.lib_security.jwt.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 

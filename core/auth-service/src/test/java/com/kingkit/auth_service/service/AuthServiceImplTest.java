@@ -1,14 +1,14 @@
 package com.kingkit.auth_service.service;
 
-import com.kingkit.auth_service.domain.RefreshToken;
 import com.kingkit.auth_service.dto.LoginRequestDto;
 import com.kingkit.auth_service.dto.LoginResponseDto;
-import com.kingkit.auth_service.dto.ReissueRequestDto;
 import com.kingkit.auth_service.exception.*;
 import com.kingkit.auth_service.feign.UserClient;
-import com.kingkit.auth_service.feign.dto.UserDto;
+import com.kingkit.auth_service.fixture.LoginRequestFixture;
 import com.kingkit.auth_service.repository.RefreshTokenRepository;
+import com.kingkit.lib_dto.UserDto;
 import com.kingkit.lib_security.jwt.JwtTokenProvider;
+import com.kingkit.lib_test_support.testsupport.fixture.UserFixture;
 
 import feign.FeignException;
 import feign.Request;
@@ -21,7 +21,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,8 +43,15 @@ class AuthServiceImplTest {
     @Test
     void login_성공() {
         // given
-        var request = new LoginRequestDto("test@email.com", "password");
-        var user = new UserDto(1L, "test@email.com", "encodedPwd", "nickname", "", "ROLE_USER");
+        LoginRequestDto request = LoginRequestFixture.valid();
+        UserDto user = UserFixture.custom(
+                1L,
+                request.getEmail(),
+                "encodedPwd",
+                "ROLE_USER",
+                "nickname",
+                ""
+        );
 
         given(userClient.getUserByEmail(request.getEmail())).willReturn(user);
         given(passwordEncoder.matches(request.getPassword(), user.getPassword())).willReturn(true);
@@ -62,34 +68,35 @@ class AuthServiceImplTest {
 
     @Test
     void login_이메일없음_예외() {
-        // FeignException.NotFound 인스턴스를 만들어서 던지기
+        // given
         FeignException notFoundException = new FeignException.NotFound(
-            "404 Not Found",
-            Request.create(Request.HttpMethod.GET, "/internal/users/email", Map.of(), null, null, null),
-            null, null
+                "404 Not Found",
+                Request.create(Request.HttpMethod.GET, "/internal/users/email", Map.of(), null, null, null),
+                null, null
         );
 
         given(userClient.getUserByEmail("no@email.com")).willThrow(notFoundException);
 
-        assertThatThrownBy(() -> authService.login(new LoginRequestDto("no@email.com", "pwd")))
+        // expect
+        assertThatThrownBy(() -> authService.login(LoginRequestFixture.withEmail("no@email.com")))
                 .isInstanceOf(UsernameNotFoundException.class);
     }
 
     @Test
     void login_비밀번호불일치_예외() {
-        var user = new UserDto(1L, "user@email.com", "encodedPwd", "nickname", "", "ROLE_USER");
-
+        // given
+        UserDto user = UserFixture.withEmail("user@email.com");
         given(userClient.getUserByEmail(user.getEmail())).willReturn(user);
         given(passwordEncoder.matches(any(), any())).willReturn(false);
 
-        assertThatThrownBy(() -> authService.login(new LoginRequestDto(user.getEmail(), "wrong")))
+        // expect
+        assertThatThrownBy(() -> authService.login(LoginRequestFixture.withEmail("user@email.com")))
                 .isInstanceOf(PasswordMismatchException.class);
     }
 
     @Test
     void logout_성공() {
         authService.logout("email@test.com");
-
         then(refreshTokenRepository).should().deleteByEmail("email@test.com");
     }
 }

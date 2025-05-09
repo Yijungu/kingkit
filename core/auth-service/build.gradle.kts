@@ -44,6 +44,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
     implementation(project(":lib:lib-security"))
+    implementation(project(":lib:lib-dto"))
 
     implementation("org.flywaydb:flyway-core")
     testImplementation(project(":lib:lib-test-support"))
