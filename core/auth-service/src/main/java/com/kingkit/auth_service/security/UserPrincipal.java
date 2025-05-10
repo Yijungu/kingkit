@@ -1,6 +1,6 @@
 package com.kingkit.auth_service.security;
 
-import com.kingkit.auth_service.feign.dto.UserDto;
+import com.kingkit.lib_dto.UserDto;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

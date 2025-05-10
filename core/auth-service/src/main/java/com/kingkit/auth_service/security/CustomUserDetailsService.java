@@ -1,7 +1,7 @@
 package com.kingkit.auth_service.security;
 
 import com.kingkit.auth_service.feign.UserClient;
-import com.kingkit.auth_service.feign.dto.UserDto;
+import com.kingkit.lib_dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
