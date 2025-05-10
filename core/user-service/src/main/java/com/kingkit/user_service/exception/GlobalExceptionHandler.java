@@ -41,10 +41,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-public ResponseEntity<ErrorResponse> handleMissingParam(MissingServletRequestParameterException ex) {
-    return ResponseEntity
-        .badRequest()
-        .body(ErrorResponse.of("ILLEGAL_ARGUMENT", ex.getMessage()));
-}
+    public ResponseEntity<ErrorResponse> handleMissingParam(MissingServletRequestParameterException ex) {
+        return ResponseEntity
+            .badRequest()
+            .body(ErrorResponse.of("ILLEGAL_ARGUMENT", ex.getMessage()));
+    }
 
 }

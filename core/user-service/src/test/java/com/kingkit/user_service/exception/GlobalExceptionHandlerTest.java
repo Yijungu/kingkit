@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.hamcrest.Matchers.containsString;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -55,4 +56,29 @@ class GlobalExceptionHandlerTest {
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.message").value("이메일은 필수입니다."));
     }
+
+    @Test
+    void missingServletRequestParameterException_테스트() throws Exception {
+        mockMvc.perform(get("/test/missing")) // email 쿼리 파라미터 누락
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("Required request parameter 'email' for method parameter type String is not present"));
+    }
+
+    @Test
+    void constraintViolationException_테스트() throws Exception {
+        mockMvc.perform(get("/test/constraint?age=-1")) // age가 음수 → 제약 위반
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message", containsString("0 이상이어야 합니다")));
+    }
+
+    @Test
+    void globalException_테스트() throws Exception {
+        mockMvc.perform(get("/test/global"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.status").value(500))
+                .andExpect(jsonPath("$.message").value("Internal server error"));
+    }
+
 }
