@@ -23,6 +23,9 @@ dependencies {
     implementation(project(":lib:lib-security"))
     implementation(project(":lib:lib-dto"))
     implementation("io.github.openfeign:feign-core:13.2.1")
+    api("org.springframework:spring-test")
+    compileOnly("jakarta.servlet:jakarta.servlet-api:6.0.0")
+
 }
 
 java {
