@@ -121,4 +121,56 @@ class InternalApiKeyFilterTest {
 
         assertThat(response.getStatus()).isEqualTo(401);
     }
+
+    @Test
+    @DisplayName("apiKeys == null → 500 Internal Server Error")
+    void nullApiKeys_shouldReturn500() throws ServletException, IOException {
+        filter = new TestableInternalApiKeyFilter(
+            null, // 👈 핵심
+            List.of("127.0.0.1"),
+            req -> true
+        );
+
+        var request = new MockHttpServletRequest("GET", "/internal/api");
+        request.setRemoteAddr("127.0.0.1");
+        var response = new MockHttpServletResponse();
+
+        filter.doFilter(request, response, (req, res) -> fail("통과되면 안 됨"));
+        assertThat(response.getStatus()).isEqualTo(500);
+    }
+
+    @Test
+    @DisplayName("allowedIps == null → IP 체크 없이 통과")
+    void nullAllowedIps_shouldPassIfKeyValid() throws ServletException, IOException {
+        filter = new TestableInternalApiKeyFilter(
+            Set.of(validKey),
+            null, // 👈 핵심
+            req -> true
+        );
+
+        var request = new MockHttpServletRequest("GET", "/internal/api");
+        request.addHeader("X-Internal-API-Key", validKey);
+        request.setRemoteAddr("192.168.0.1"); // IP 제한 없어도 통과해야 함
+        var response = new MockHttpServletResponse();
+
+        filter.doFilter(request, response, (req, res) -> {
+            var auth = SecurityContextHolder.getContext().getAuthentication();
+            assertThat(auth).isNotNull();
+        });
+    }
+
+    @Test
+    @DisplayName("IPv6 loopback → normalizeIp(): ::1 로 변환됨")
+    void ipv6Loopback_shouldNormalizeToV4() throws ServletException, IOException {
+        var request = new MockHttpServletRequest("GET", "/internal/api");
+        request.setRemoteAddr("0:0:0:0:0:0:0:1"); // IPv6 loopback
+        request.addHeader("X-Internal-API-Key", validKey);
+        var response = new MockHttpServletResponse();
+
+        filter.doFilter(request, response, (req, res) -> {
+            var auth = SecurityContextHolder.getContext().getAuthentication();
+            assertThat(auth).isNotNull();
+        });
+    }
+
 }
