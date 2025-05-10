@@ -95,4 +95,30 @@ class InternalApiKeyFilterTest {
             assertThat(auth).isNull(); // shouldNotFilter 작동함
         });
     }
+
+    @Test
+    @DisplayName("key == null → mask()의 null 분기 커버 (401 Unauthorized)")
+    void nullKey_shouldTriggerMaskNullBranch() throws ServletException, IOException {
+        var request = new MockHttpServletRequest("GET", "/internal/api");
+        // 헤더 누락 intentionally
+        request.setRemoteAddr("127.0.0.1");
+        var response = new MockHttpServletResponse();
+
+        filter.doFilter(request, response, (req, res) -> fail("통과되면 안 됨"));
+
+        assertThat(response.getStatus()).isEqualTo(401);
+    }   
+
+    @Test
+    @DisplayName("key.length < 4 → mask()의 짧은 키 분기 커버 (401 Unauthorized)")
+    void shortKey_shouldTriggerMaskShortBranch() throws ServletException, IOException {
+        var request = new MockHttpServletRequest("GET", "/internal/api");
+        request.addHeader("X-Internal-API-Key", "abc"); // 길이 3
+        request.setRemoteAddr("127.0.0.1");
+        var response = new MockHttpServletResponse();
+
+        filter.doFilter(request, response, (req, res) -> fail("통과되면 안 됨"));
+
+        assertThat(response.getStatus()).isEqualTo(401);
+    }
 }
