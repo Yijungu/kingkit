@@ -12,13 +12,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
-    private final JwtAuthenticationEntryPoint entryPoint; // ✅ 추가
+    private final JwtAuthenticationEntryPoint entryPoint;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -33,13 +34,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String userId = tokenProvider.getUserId(token);
                 String role = tokenProvider.getRole(token);
 
+                List<SimpleGrantedAuthority> authorities = (role != null)
+                    ? List.of(new SimpleGrantedAuthority(role))
+                    : List.of(); 
+
                 var auth = new UsernamePasswordAuthenticationToken(
-                        userId, null, Collections.singleton(() -> role)
+                        userId, null, authorities
                 );
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
             } else {
-                // ✅ 유효하지 않은 토큰이면 entryPoint 호출
                 entryPoint.commence(request, response,
                         new BadCredentialsException("Invalid JWT token"));
                 return;
@@ -48,7 +52,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
 
     private String resolveToken(HttpServletRequest request) {
         String bearer = request.getHeader("Authorization");

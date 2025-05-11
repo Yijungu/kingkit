@@ -1,20 +1,14 @@
 package com.kingkit.lib_security.jwt;
 
-import com.kingkit.lib_security.jwt.JwtAuthenticationEntryPoint;
-import com.kingkit.lib_security.jwt.JwtAuthenticationFilter;
-import com.kingkit.lib_security.jwt.JwtTokenProvider;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.mock.web.MockFilterChain;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 
+import static com.kingkit.lib_test_support.testsupport.jwt.JwtTestUtils.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -33,16 +27,15 @@ class JwtAuthenticationFilterTest {
     }
 
     @Test
-    @DisplayName("유효한 JWT → ROLE_USER 부여")
+    @DisplayName("✅ 유효한 JWT → ROLE_USER 부여")
     void validJwt_setsAuthentication() throws ServletException, IOException {
-        var request = new MockHttpServletRequest("GET", "/api/protected");
-        request.addHeader("Authorization", "Bearer valid.token.here");
-        var response = new MockHttpServletResponse();
-        var chain = new MockFilterChain();
+        var request = requestWithToken("/api/protected", DEFAULT_VALID_TOKEN);
+        var response = response();
+        var chain = chain();
 
-        when(jwtTokenProvider.isTokenValid("valid.token.here")).thenReturn(true);
-        when(jwtTokenProvider.getUserId("valid.token.here")).thenReturn("user@example.com");
-        when(jwtTokenProvider.getRole("valid.token.here")).thenReturn("ROLE_USER");
+        when(jwtTokenProvider.isTokenValid(DEFAULT_VALID_TOKEN)).thenReturn(true);
+        when(jwtTokenProvider.getUserId(DEFAULT_VALID_TOKEN)).thenReturn("user@example.com");
+        when(jwtTokenProvider.getRole(DEFAULT_VALID_TOKEN)).thenReturn("ROLE_USER");
 
         filter.doFilterInternal(request, response, chain);
 
@@ -53,11 +46,11 @@ class JwtAuthenticationFilterTest {
     }
 
     @Test
-    @DisplayName("Authorization 헤더 없음 → 인증 없이 흐름 유지")
+    @DisplayName("✅ Authorization 헤더 없음 → 인증 없이 흐름 유지")
     void noAuthorizationHeader_passesThrough() throws ServletException, IOException {
-        var request = new MockHttpServletRequest("GET", "/api/public");
-        var response = new MockHttpServletResponse();
-        var chain = new MockFilterChain();
+        var request = requestWithoutToken("/api/public");
+        var response = response();
+        var chain = chain();
 
         filter.doFilterInternal(request, response, chain);
 
@@ -65,17 +58,60 @@ class JwtAuthenticationFilterTest {
     }
 
     @Test
-    @DisplayName("잘못된 JWT → EntryPoint 작동")
+    @DisplayName("✅ 잘못된 JWT → EntryPoint 작동")
     void invalidJwt_triggersEntryPoint() throws ServletException, IOException {
-        var request = new MockHttpServletRequest("GET", "/api/protected");
-        request.addHeader("Authorization", "Bearer invalid.token");
-        var response = new MockHttpServletResponse();
-        var chain = new MockFilterChain();
+        var request = requestWithToken("/api/protected", DEFAULT_INVALID_TOKEN);
+        var response = response();
+        var chain = chain();
 
-        when(jwtTokenProvider.isTokenValid("invalid.token")).thenReturn(false);
+        when(jwtTokenProvider.isTokenValid(DEFAULT_INVALID_TOKEN)).thenReturn(false);
 
         filter.doFilterInternal(request, response, chain);
 
         verify(entryPoint).commence(any(), any(), any());
+    }
+
+    @Test
+    @DisplayName("✅ Authorization 헤더 형식이 잘못된 경우 → 인증 없이 흐름 유지")
+    void invalidAuthorizationHeaderFormat_passesThrough() throws ServletException, IOException {
+        var request = requestWithoutToken("/api/protected");
+        request.addHeader("Authorization", "Token invalid-format"); // Bearer 아님
+        var response = response();
+        var chain = chain();
+
+        filter.doFilterInternal(request, response, chain);
+
+        assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+    }
+
+    @Test
+    @DisplayName("✅ 'Bearer '만 있고 토큰 없음 → 인증 없이 흐름 유지")
+    void emptyBearerToken_passesThrough() throws ServletException, IOException {
+        var request = requestWithToken("/api/protected", "");
+        var response = response();
+        var chain = chain();
+
+        filter.doFilterInternal(request, response, chain);
+
+        assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+    }
+
+    @Test
+    @DisplayName("✅ 유효한 JWT + Role 없음 → 권한 없음 상태로 인증")
+    void validJwt_withoutRole_setsAuthWithoutAuthorities() throws ServletException, IOException {
+        var request = requestWithToken("/api/protected", DEFAULT_VALID_TOKEN);
+        var response = response();
+        var chain = chain();
+
+        when(jwtTokenProvider.isTokenValid(DEFAULT_VALID_TOKEN)).thenReturn(true);
+        when(jwtTokenProvider.getUserId(DEFAULT_VALID_TOKEN)).thenReturn("user@example.com");
+        when(jwtTokenProvider.getRole(DEFAULT_VALID_TOKEN)).thenReturn(null); // Role 없음
+
+        filter.doFilterInternal(request, response, chain);
+
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        assertThat(auth).isNotNull();
+        assertThat(auth.getAuthorities()).isEmpty();
+        assertThat(auth.getPrincipal()).isEqualTo("user@example.com");
     }
 }
