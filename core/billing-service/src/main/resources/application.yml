@@ -1,0 +1,93 @@
+
+server:
+  port: 8083
+
+spring:
+  application:
+    name: billing-service
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true 
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+---
+# ✅ 보안 설정 (JWT & 내부 API 키)
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-validity: 3600000
+  refresh-token-validity: 604800000
+
+internal:
+  api-keys: 
+    - ${INTERNAL_API_KEYS}
+  allowed-ips:
+    - 127.0.0.1
+    - "::1"
+    - 192.168.0.10
+    - 172.30.1.25
+    - 0:0:0:0:0:0:0:1
+
+---
+# ✅ 외부 PG사 Toss 연동 정보
+toss:
+  secret-key: ${TOSS_SECRET_KEY:test_sk_example}
+  base-url: https://api.tosspayments.com
+  billing-url: ${toss.base-url}/v1/billing
+  webhook:
+    signature-secret: ${TOSS_SIGNATURE_SECRET:hmac-example-secret}
+
+---
+# ✅ 로깅
+logging:
+  level:
+    root: INFO
+    com.kingkit.billing_service: DEBUG
+    org.springframework.web: INFO
+
+---
+# ✅ Swagger(OpenAPI)
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true
+    tags-sorter: alpha
+    operations-sorter: method
+
+---
+# ✅ Feign Client 기본 설정 (e.g., user-service 연동 시)
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
+
+---
+# ✅ Custom 속성 (Redis TTL 등)
+app:
+  redis:
+    order-id-ttl: 300 # 초단위 TTL (ex: 5분)
