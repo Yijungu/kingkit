@@ -1,6 +1,7 @@
 package com.kingkit.billing_service.dto.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * 특정 날짜 또는 유저 ID 리스트 기준으로 구독 결제를 수행함
  */
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminBillingTriggerRequest {

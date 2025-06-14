@@ -5,19 +5,26 @@ import com.kingkit.billing_service.domain.payment.PaymentStatus;
 import com.kingkit.billing_service.domain.payment.repository.PaymentFailureRepository;
 import com.kingkit.billing_service.dto.request.RetryPaymentRequest;
 import com.kingkit.billing_service.integration.common.IntegrationTestSupport;
-
-import com.kingkit.billing_service.support.FixtureFactory;
+import com.kingkit.billing_service.support.config.JwtTestUtilConfig;
+import com.kingkit.billing_service.support.core.FixtureFactory;
+import com.kingkit.billing_service.support.stub.TossMockStub;
 import com.kingkit.lib_test_support.testsupport.util.JwtTestTokenProvider;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+@Slf4j
+@Import(JwtTestUtilConfig.class)
 class RetryPaymentIntegrationTest extends IntegrationTestSupport {
 
     @Autowired
@@ -34,6 +41,11 @@ class RetryPaymentIntegrationTest extends IntegrationTestSupport {
 
     private static final String ENDPOINT = "/billing/retry";
 
+    @BeforeEach
+    void setup() {
+        TossMockStub.stub200ResponseBilling2001();     // billingKey=test-404 → 404
+    }
+
     @Test
     @DisplayName("✅ 재시도 성공 → resolved 처리")
     void retrySuccess() throws Exception {
@@ -44,7 +56,7 @@ class RetryPaymentIntegrationTest extends IntegrationTestSupport {
         var token = tokenProvider.generateUserToken(userId);
 
         var dto = new RetryPaymentRequest(sub.getId(), "retry-20240519-001", 10900L);
-
+    
         // when
         ResultActions result = mockMvc.perform(post(ENDPOINT)
             .header("Authorization", "Bearer " + token)
@@ -64,6 +76,7 @@ class RetryPaymentIntegrationTest extends IntegrationTestSupport {
         Long userId = 2002L;
         var sub = fixtureFactory.createActiveSubscription(userId);
         var token = tokenProvider.generateUserToken(userId);
+        var failure = fixtureFactory.createPaymentFailure(sub, false, 3);
 
         var dto = new RetryPaymentRequest(sub.getId(), "retry-limit", 10900L);
 
@@ -74,8 +87,8 @@ class RetryPaymentIntegrationTest extends IntegrationTestSupport {
             .content(objectMapper.writeValueAsString(dto)));
 
         // then
-        result.andExpect(status().isOk())
-              .andExpect(jsonPath("$.status").value(PaymentStatus.FAILED.name()));
+        result.andExpect(status().isBadRequest())
+              .andExpect(jsonPath("$.status").value(400));
     }
 
     @Test
@@ -86,7 +99,7 @@ class RetryPaymentIntegrationTest extends IntegrationTestSupport {
         var sub = fixtureFactory.createActiveSubscription(userId);
         fixtureFactory.createPaymentFailure(sub, true, 1);
         var token = tokenProvider.generateUserToken(userId);
-
+        var failure = fixtureFactory.createPaymentFailure(sub, true, 3);
         var dto = new RetryPaymentRequest(sub.getId(), "retry-resolved", 10900L);
 
         // when

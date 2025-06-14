@@ -4,6 +4,7 @@ import com.kingkit.billing_service.domain.subscription.Subscription;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
@@ -45,8 +46,17 @@ public class PaymentFailure {
     }
 
     public void scheduleNextRetry(Duration interval) {
+        if (interval == null) {
+            throw new IllegalArgumentException("재시도 간격(interval)은 null일 수 없습니다.");
+        }
+
         this.retryCount += 1;
         this.retryScheduledAt = LocalDateTime.now().plus(interval);
     }
+
+    public void scheduleNextRetry() {
+        scheduleNextRetry(Duration.ofHours(1));  // 기본 재시도 간격 1시간
+    }
+
 }
 

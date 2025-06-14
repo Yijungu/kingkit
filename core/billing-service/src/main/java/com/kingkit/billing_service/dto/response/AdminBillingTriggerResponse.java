@@ -1,27 +1,34 @@
 package com.kingkit.billing_service.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
 
 /**
- * 관리자 수동 결제 트리거 결과 응답 DTO
- * 전체 실행 통계 및 개별 유저별 결과를 포함함
+ * 관리자 정기 결제 트리거 응답 DTO
+ * 성공/실패 수와 실패 상세 정보를 포함함
  */
 @Getter
 @Builder
+@AllArgsConstructor
 public class AdminBillingTriggerResponse {
 
-    private int successCount;
-    private int failureCount;
-    private List<TriggerResultDetail> details;
+    /** 성공한 사용자 수 */
+    private final int successCount;
 
-    @Getter
-    @Builder
-    public static class TriggerResultDetail {
-        private Long userId;
-        private String status;    // SUCCESS or FAILED
-        private String reason;    // nullable if SUCCESS
+    /** 실패한 사용자 수 */
+    private final int failureCount;
+
+    /** 실패 상세 리스트 */
+    private final List<BillingTriggerDetail> failures;
+
+    public static AdminBillingTriggerResponse of(List<BillingTriggerDetail> failures, int successCount) {
+        return AdminBillingTriggerResponse.builder()
+                .successCount(successCount)
+                .failureCount(failures.size())
+                .failures(failures)
+                .build();
     }
 }

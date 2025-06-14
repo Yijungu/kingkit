@@ -1,7 +1,6 @@
 package com.kingkit.billing_service.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
 
 /**
  * Toss Webhook 수신용 DTO.

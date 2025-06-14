@@ -1,6 +1,6 @@
 plugins {
     id("org.springframework.boot") version "3.2.4" apply false   // 모듈에서 버전 없이 참조
-    id("io.spring.dependency-management") version "1.1.4"        // 반드시 apply (false X)
+    id("io.spring.dependency-management") version "1.1.4"  
 }
 
 allprojects {

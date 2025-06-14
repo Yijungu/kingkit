@@ -20,20 +20,20 @@ public final class JwtTestTokenProvider {
      * 일반 유저용 JWT 생성 (ROLE_USER)
      */
     public String generateUserToken(Long userId) {
-        return jwtTokenProvider.createAccessToken("user-" + userId, "ROLE_USER");
+        return jwtTokenProvider.createAccessToken(String.valueOf(userId), "ROLE_USER");
     }
 
     /**
      * 관리자용 JWT 생성 (ROLE_ADMIN)
      */
     public String generateAdminToken(Long userId) {
-        return jwtTokenProvider.createAccessToken("admin-" + userId, "ROLE_ADMIN");
+        return jwtTokenProvider.createAccessToken(String.valueOf(userId), "ROLE_ADMIN");
     }
 
     /**
      * 커스텀 Role 기반 JWT 생성
      */
     public String generateToken(Long userId, String role) {
-        return jwtTokenProvider.createAccessToken("user-" + userId, role);
+        return jwtTokenProvider.createAccessToken(String.valueOf(userId), role);
     }
 }

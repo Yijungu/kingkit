@@ -2,17 +2,34 @@ package com.kingkit.billing_service.dto.response;
 
 import com.kingkit.billing_service.domain.payment.PaymentStatus;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-/**
- * 수동 결제 처리 후 반환되는 응답 DTO입니다.
- * 결제 결과 정보와 상태를 포함합니다.
- */
+@Getter
 @Builder
-public record ManualBillingResponseDto(
-    String paymentKey,               // PG에서 반환된 결제 키
-    String orderId,                  // 주문 식별자
-    PaymentStatus status,            // SUCCESS / FAILED
-    LocalDateTime paidAt             // 결제 시각
-) {}
+public class ManualBillingResponseDto {
+
+    private final String paymentKey;
+    private final String orderId;
+    private final PaymentStatus status;
+    private final LocalDateTime paidAt;
+
+    public static ManualBillingResponseDto success(String paymentKey, String orderId, LocalDateTime paidAt) {
+        return ManualBillingResponseDto.builder()
+                .paymentKey(paymentKey)
+                .orderId(orderId)
+                .status(PaymentStatus.SUCCESS)
+                .paidAt(paidAt)
+                .build();
+    }
+
+    public static ManualBillingResponseDto failed(String orderId) {
+        return ManualBillingResponseDto.builder()
+                .paymentKey(null)
+                .orderId(orderId)
+                .status(PaymentStatus.FAILED)
+                .paidAt(null)
+                .build();
+    }
+}

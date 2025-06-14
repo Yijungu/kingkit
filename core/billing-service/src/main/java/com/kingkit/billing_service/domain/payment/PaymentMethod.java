@@ -44,12 +44,37 @@ public class PaymentMethod {
     @Column(nullable = false)
     private boolean isActive;
 
-    /** 단일 결제 수단 활성화 처리 */
+    // -------------------------------
+    // 📌 상태 전이 메서드
+    // -------------------------------
+
+    /** 결제 수단 비활성화 */
     public void deactivate() {
         this.isActive = false;
     }
 
+    /** 결제 수단 활성화 */
     public void activate() {
         this.isActive = true;
+    }
+
+    /** 현재 활성 상태인지 여부 반환 */
+    public boolean isActivated() {
+        return this.isActive;
+    }
+
+    // -------------------------------
+    // 📌 정적 생성 메서드 (선택적)
+    // -------------------------------
+
+    public static PaymentMethod create(Long userId, String billingKey, String cardCompany, String maskedCard) {
+        return PaymentMethod.builder()
+                .userId(userId)
+                .billingKey(billingKey)
+                .cardCompany(cardCompany)
+                .cardNumberMasked(maskedCard)
+                .registeredAt(LocalDateTime.now())
+                .isActive(true)
+                .build();
     }
 }

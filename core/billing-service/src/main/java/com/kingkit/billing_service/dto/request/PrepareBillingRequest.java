@@ -1,12 +1,13 @@
 package com.kingkit.billing_service.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
+/**
+ * 사용자 결제 수단 등록 요청 DTO
+ * 
+ * ⚠️ userId는 JWT 인증에서 별도로 추출하여 서비스 메서드에 전달
+ */
 public record PrepareBillingRequest(
-
-    @NotNull(message = "userId는 필수입니다.")
-    Long userId,
 
     @NotBlank(message = "planId는 필수입니다.")
     String planId,

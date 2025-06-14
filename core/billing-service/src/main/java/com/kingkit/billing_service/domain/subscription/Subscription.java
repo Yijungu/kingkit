@@ -60,4 +60,28 @@ public class Subscription {
     public boolean isActive() {
         return this.status == SubscriptionStatus.ACTIVE;
     }
+
+    // Subscription.java
+    public String generateNextOrderId() {
+        // 실무에서는 Plan ID + userId + timestamp 등의 조합 권장
+        return "order-" + this.getUserId() + "-" + System.currentTimeMillis();
+    }
+
+    public long getAmountToBill() {
+        return this.getPlan().getPrice();
+    }
+
+    public void markBillingSuccess(LocalDateTime paidAt) {
+        if (!this.isActive()) {
+            throw new IllegalStateException("활성 상태가 아닌 구독은 결제 처리할 수 없습니다.");
+        }
+
+        // 최초 결제인 경우 startedAt 보정 (선택적)
+        if (this.startedAt == null) {
+            this.startedAt = paidAt;
+        }
+
+        // 다음 결제일 갱신
+        this.renewNextBilling();
+    }
 }
