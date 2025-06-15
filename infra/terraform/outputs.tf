@@ -1,3 +1,3 @@
 output "rds_endpoint" {
-  value = aws_db_instance.auth_db.endpoint
+  value = module.auth_db.rds_endpoint
 }
