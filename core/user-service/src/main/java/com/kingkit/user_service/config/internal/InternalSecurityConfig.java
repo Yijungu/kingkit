@@ -1,5 +1,7 @@
-package com.kingkit.lib_security.apikey;
+package com.kingkit.user_service.config.internal;
 
+import com.kingkit.lib_security.apikey.ApiKeyProperties;
+import com.kingkit.lib_security.apikey.InternalApiKeyFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -11,24 +13,21 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableConfigurationProperties(ApiKeyProperties.class)
 @RequiredArgsConstructor
-public class ApiKeyFilterAutoConfig {
+@EnableConfigurationProperties(ApiKeyProperties.class)
+public class InternalSecurityConfig {
 
     private final ApiKeyProperties props;
 
-    /** internal.api-keys 가 설정돼 있을 때만 필터 활성화 */
     @Bean
-    @Order(1)
+    @Order(1) // ✅ 우선순위 명시
     @ConditionalOnProperty(name = "internal.api-keys")
     public SecurityFilterChain internalApiFilterChain(HttpSecurity http) throws Exception {
-
-        http.securityMatcher("/internal/users/**")              // 기본 패턴
+        http.securityMatcher("/internal/**")  // 📌 유연한 매칭
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
             .addFilterBefore(new InternalApiKeyFilter(props),
                              UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 }

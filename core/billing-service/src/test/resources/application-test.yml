@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop   # 테스트 후 자동 삭제
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+
+  flyway:
+    # 👉 단위·통합테스트에서는 마이그레이션 불필요
+    enabled: false
+
+  data:
+    redis:
+      timeout: 5s           # 기본 1 분 → 짧게 실패 (디버깅 편리)
+      lettuce:
+        pool:
+          max-active: 16
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+
+logging:
+  level:
+    root: warn
+    org.springframework.web: debug
+    com.kingkit: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+toss:
+  base-url: http://localhost:${wiremock.server.port} 
+  secret-key: test-secret-key
+
+
+internal:
+  api-keys:
+    - testkey-1234
+  allowed-ips:
+    - 127.0.0.1
+    - "::1"
+
+jwt:
+  secret: mgFJhaTJLAkwk9M6nywY0UKQYR6EK9o4F8fhNS7zRBfjyIzooyFQKEvTC8SwzdZbG5AZ2zM6SfMqbq58C0h71g==
+  access-token-validity: 3600000
+  refresh-token-validity: 604800000

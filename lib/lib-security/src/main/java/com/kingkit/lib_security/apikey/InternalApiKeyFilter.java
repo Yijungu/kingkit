@@ -33,7 +33,7 @@ public class InternalApiKeyFilter extends OncePerRequestFilter {
     public InternalApiKeyFilter(ApiKeyProperties props) {
         this(props.apiKeys(),
              props.allowedIps(),
-             req -> req.getRequestURI().startsWith("/internal/users"));
+             req -> req.getRequestURI().startsWith("/internal"));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class InternalApiKeyFilter extends OncePerRequestFilter {
             return;
         }
         if (key == null || !apiKeys.contains(key)) {
-            log.warn("❌ 잘못된 키. IP={} key={}", requestIp, mask(key));
+            log.warn("❌ 잘못된 키. IP={}, 받은 키={}, 허용 키 목록={}", requestIp, mask(key), apiKeys);
             res.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid Internal API-Key");
             return;
         }
