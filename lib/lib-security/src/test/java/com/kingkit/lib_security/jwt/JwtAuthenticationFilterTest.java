@@ -34,7 +34,7 @@ class JwtAuthenticationFilterTest {
         var chain = chain();
 
         when(jwtTokenProvider.isTokenValid(DEFAULT_VALID_TOKEN)).thenReturn(true);
-        when(jwtTokenProvider.getUserId(DEFAULT_VALID_TOKEN)).thenReturn("user@example.com");
+        when(jwtTokenProvider.getUserId(DEFAULT_VALID_TOKEN)).thenReturn("1"); // ✅ 숫자 문자열
         when(jwtTokenProvider.getRole(DEFAULT_VALID_TOKEN)).thenReturn("ROLE_USER");
 
         filter.doFilterInternal(request, response, chain);
@@ -42,7 +42,7 @@ class JwtAuthenticationFilterTest {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         assertThat(auth).isNotNull();
         assertThat(auth.getAuthorities()).extracting("authority").contains("ROLE_USER");
-        assertThat(auth.getPrincipal()).isEqualTo("user@example.com");
+        assertThat(auth.getPrincipal()).isEqualTo(1L); // ✅ Long 비교
     }
 
     @Test
@@ -104,7 +104,7 @@ class JwtAuthenticationFilterTest {
         var chain = chain();
 
         when(jwtTokenProvider.isTokenValid(DEFAULT_VALID_TOKEN)).thenReturn(true);
-        when(jwtTokenProvider.getUserId(DEFAULT_VALID_TOKEN)).thenReturn("user@example.com");
+        when(jwtTokenProvider.getUserId(DEFAULT_VALID_TOKEN)).thenReturn("1"); // ✅ 숫자 문자열
         when(jwtTokenProvider.getRole(DEFAULT_VALID_TOKEN)).thenReturn(null); // Role 없음
 
         filter.doFilterInternal(request, response, chain);
@@ -112,6 +112,6 @@ class JwtAuthenticationFilterTest {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         assertThat(auth).isNotNull();
         assertThat(auth.getAuthorities()).isEmpty();
-        assertThat(auth.getPrincipal()).isEqualTo("user@example.com");
+        assertThat(auth.getPrincipal()).isEqualTo(1L); // ✅ Long 비교
     }
 }
