@@ -2,6 +2,10 @@ provider "aws" {
   region = var.region
 }
 
+module "iam" {
+  source = "./modules/iam"
+}
+
 module "ec2_sg" {
   source              = "./modules/security_group"
   name                = "ec2-sg"
