@@ -32,8 +32,8 @@ module "auth_db" {
 }
 
 module "ssm_role" {
-  source = "./modules/iam"
-  name   = "ec2-ssm-role"
+  source = "./modules/iam/ssm_role"
+  name   = "ec2-ssm-role"    
 }
 
 module "ec2" {
