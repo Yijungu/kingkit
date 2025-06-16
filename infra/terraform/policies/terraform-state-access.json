@@ -1,0 +1,23 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "TerraformS3StateAccess",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": "arn:aws:s3:::terraform-state-king"
+    },
+    {
+      "Sid": "TerraformS3ObjectAccess",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+      "Resource": "arn:aws:s3:::terraform-state-king/*"
+    },
+    {
+      "Sid": "TerraformDynamoDBLock",
+      "Effect": "Allow",
+      "Action": ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:DeleteItem", "dynamodb:UpdateItem"],
+      "Resource": "arn:aws:dynamodb:ap-northeast-2:010438505844:table/terraform-locks-king"
+    }
+  ]
+}

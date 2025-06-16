@@ -1,0 +1,39 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "IAMSSMRoleManagement",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole", "iam:AttachRolePolicy", "iam:DeleteRole", "iam:GetRole",
+        "iam:TagRole", "iam:PassRole", "iam:ListRolePolicies", "iam:ListAttachedRolePolicies"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "IAMInstanceProfileManagement",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateInstanceProfile", "iam:DeleteInstanceProfile",
+        "iam:AddRoleToInstanceProfile", "iam:RemoveRoleFromInstanceProfile",
+        "iam:GetInstanceProfile", "iam:ListInstanceProfilesForRole"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "RDSControl",
+      "Effect": "Allow",
+      "Action": [
+        "rds:CreateDBInstance", "rds:DeleteDBInstance", "rds:DescribeDBInstances",
+        "rds:ModifyDBInstance", "rds:RebootDBInstance"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "STSCallerIdentity",
+      "Effect": "Allow",
+      "Action": ["sts:GetCallerIdentity"],
+      "Resource": "*"
+    }
+  ]
+}
