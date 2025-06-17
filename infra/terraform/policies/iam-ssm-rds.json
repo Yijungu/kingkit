@@ -21,6 +21,16 @@
       "Resource": "*"
     },
     {
+      "Sid": "IAMPolicyVersionControl",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreatePolicyVersion",
+        "iam:SetDefaultPolicyVersion",
+        "iam:DeletePolicyVersion"
+      ],
+      "Resource": "arn:aws:iam::010438505844:policy/ec2-control"
+    },
+    {
       "Sid": "RDSControl",
       "Effect": "Allow",
       "Action": [
