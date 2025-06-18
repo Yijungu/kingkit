@@ -18,6 +18,8 @@ resource "aws_security_group" "this" {
 
   tags = {
     Name = "rds-sg"
+    Purpose = "Allow Postgres from EC2"
+    Version = "v2" 
   }
 }
 

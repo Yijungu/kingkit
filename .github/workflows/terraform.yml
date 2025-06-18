@@ -48,7 +48,7 @@ jobs:
 
       # propagation 필요 시 30~60초 정도 대기
       - name: Wait for IAM propagation
-        run: sleep 60
+        run: sleep 10
 
       # ─────────────────────────────────────────────────────────
       # 2. 전체 인프라 적용
