@@ -26,6 +26,8 @@ module "rds_sg" {
   ingress_to_port     = 5432
   ingress_protocol    = "tcp"
   ingress_cidr_blocks = ["0.0.0.0/0"]
+
+  ec2_sg_id           = module.ec2_sg.security_group_id
 }
 
 module "auth_db" {
