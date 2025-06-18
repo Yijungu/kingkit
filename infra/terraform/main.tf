@@ -30,13 +30,6 @@ module "rds_sg" {
   depends_on          = [module.iam]
 }
 
-
-module "rds_sg_v2" {
-  source     = "./modules/security_group/rds_v2"
-  vpc_id     = data.aws_vpc.default.id
-  ec2_sg_id  = module.ec2_sg.security_group_id
-}
-
 module "auth_db" {
   source                  = "./modules/rds"
   identifier              = "auth-db"
@@ -47,7 +40,6 @@ module "auth_db" {
   # ✅ 두 SG를 동시에 붙임 (기존 + 신규)
   security_group_ids = [
     module.rds_sg.security_group_id,    # 기존 (rds_sg)
-    module.rds_sg_v2.security_group_id  # 신규
   ]
   depends_on        = [module.iam]
 }
