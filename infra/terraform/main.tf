@@ -2,9 +2,6 @@ provider "aws" {
   region = var.region
 }
 
-data "aws_vpc" "default" {}
-data "aws_subnet" "default" {}
-
 module "iam" {
   source = "./modules/iam"
 }
