@@ -6,28 +6,33 @@ module "iam" {
   source = "./modules/iam"
 }
 
-module "ec2_sg" {
-  source = "./modules/security_group/ec2"
+module "ssm_role" {
+  source = "./modules/iam/ssm_role"
+  name   = "ec2-ssm-role"
+  depends_on = [module.iam]
+}
 
+module "ec2_sg" {
+  source              = "./modules/security_group/ec2"
   name                = "ec2-sg"
   description         = "Allow SSH access"
   ingress_from_port   = 22
   ingress_to_port     = 22
   ingress_protocol    = "tcp"
   ingress_cidr_blocks = ["0.0.0.0/0"]
+  depends_on          = [module.iam]
 }
 
 module "rds_sg" {
-  source = "./modules/security_group/rds"
-
+  source              = "./modules/security_group/rds"
   name                = "rds-sg"
   description         = "Allow PostgreSQL access"
   ingress_from_port   = 5432
   ingress_to_port     = 5432
   ingress_protocol    = "tcp"
   ingress_cidr_blocks = ["0.0.0.0/0"]
-
   ec2_sg_id           = module.ec2_sg.security_group_id
+  depends_on          = [module.iam]
 }
 
 module "auth_db" {
@@ -37,11 +42,7 @@ module "auth_db" {
   db_username       = var.db_username
   db_password       = var.db_password
   security_group_id = module.rds_sg.security_group_id
-}
-
-module "ssm_role" {
-  source = "./modules/iam/ssm_role"
-  name   = "ec2-ssm-role"
+  depends_on        = [module.iam]
 }
 
 module "ec2" {
@@ -52,4 +53,5 @@ module "ec2" {
   subnet_id            = data.aws_subnet.default.id
   security_group_id    = module.ec2_sg.security_group_id
   iam_instance_profile = module.ssm_role.instance_profile_name
+  depends_on           = [module.iam]
 }
