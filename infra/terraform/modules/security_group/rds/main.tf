@@ -20,11 +20,3 @@ resource "aws_security_group" "this" {
     Name = "rds-sg"
   }
 }
-
-variable "ec2_sg_id" {
-  type = string
-}
-
-output "security_group_id" {
-  value = aws_security_group.this.id
-}
