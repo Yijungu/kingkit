@@ -35,9 +35,11 @@ variable "publicly_accessible" {
   default = true
 }
 
-variable "security_group_id" {
-  type = string
+variable "security_group_ids" {
+  description = "List of security group IDs to associate with RDS"
+  type        = list(string)
 }
+
 
 variable "backup_retention_period" {
   type    = number
