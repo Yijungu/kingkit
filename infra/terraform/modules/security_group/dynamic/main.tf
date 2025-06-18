@@ -24,6 +24,8 @@ resource "aws_security_group" "this" {
   tags = {
     Name = each.key
   }
+  
+  lifecycle { create_before_destroy = true }
 }
 
 variable "security_groups" {
