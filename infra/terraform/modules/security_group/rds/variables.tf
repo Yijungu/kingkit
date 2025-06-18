@@ -1,4 +1,9 @@
-variable "ec2_sg_id" {
+variable "vpc_id" {
+  description = "VPC ID for the RDS security group"
   type        = string
-  description = "EC2 인스턴스의 보안 그룹 ID"
+}
+
+variable "ec2_sg_id" {
+  description = "EC2 security group ID allowed to access RDS"
+  type        = string
 }
