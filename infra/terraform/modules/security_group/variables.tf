@@ -1,23 +1,29 @@
 variable "name" {
-  type = string
+  description = "보안 그룹 이름"
+  type        = string
 }
 
 variable "description" {
-  type = string
+  description = "보안 그룹 설명"
+  type        = string
 }
 
 variable "ingress_from_port" {
-  type = number
+  description = "인바운드 시작 포트"
+  type        = number
 }
 
 variable "ingress_to_port" {
-  type = number
+  description = "인바운드 종료 포트"
+  type        = number
 }
 
 variable "ingress_protocol" {
-  type = string
+  description = "인바운드 프로토콜 (예: tcp)"
+  type        = string
 }
 
 variable "ingress_cidr_blocks" {
-  type = list(string)
+  description = "허용할 인바운드 CIDR 목록"
+  type        = list(string)
 }
