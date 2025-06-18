@@ -1,12 +1,12 @@
 resource "aws_security_group" "this" {
-  name        = "rds-sg"
-  description = "Allow PostgreSQL from EC2 SG"
+  name        = "rds-security-group"
+  description = "Allow PostgreSQL access"
 
   ingress {
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [var.ec2_sg_id]
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # 예전에는 security_groups가 아니었음
   }
 
   egress {
@@ -17,6 +17,10 @@ resource "aws_security_group" "this" {
   }
 
   tags = {
-    Name = "rds-sg"
+    Name = "rds-security-group"
+  }
+
+  lifecycle {
+    prevent_destroy = true  # 원래 있었던 경우엔 유지
   }
 }
