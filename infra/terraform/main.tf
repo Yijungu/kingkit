@@ -13,7 +13,7 @@ module "ssm_role" {
 }
 
 module "ec2_sg" {
-  source              = "./modules/security_group"
+  source              = "./modules/security_group/rds"
   name                = "ec2-sg"
   description         = "Allow SSH access"
   ingress_from_port   = 22
