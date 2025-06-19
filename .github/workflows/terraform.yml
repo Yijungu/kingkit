@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, develop ]
   pull_request:
-    branches: [ "**" ]        # 필요 시 수정
+    branches: [ "**" ]       # 필요 시 수정
 
 jobs:
   terraform:

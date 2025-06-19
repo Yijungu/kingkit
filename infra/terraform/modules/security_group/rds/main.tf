@@ -1,12 +1,12 @@
 resource "aws_security_group" "this" {
-  name        = "rds-security-group"
-  description = "Allow PostgreSQL access"
+  name        = var.name
+  description = var.description
 
   ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # 예전에는 security_groups가 아니었음
+    from_port   = var.ingress_from_port
+    to_port     = var.ingress_to_port
+    protocol    = var.ingress_protocol
+    cidr_blocks = var.ingress_cidr_blocks
   }
 
   egress {
@@ -17,10 +17,6 @@ resource "aws_security_group" "this" {
   }
 
   tags = {
-    Name = "rds-security-group"
-  }
-
-  lifecycle {
-    prevent_destroy = true  # 원래 있었던 경우엔 유지
+    Name = var.name
   }
 }

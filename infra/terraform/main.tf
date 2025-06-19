@@ -20,15 +20,14 @@ module "ec2_sg" {
 
 module "rds_sg" {
   source              = "./modules/security_group/rds"
-  name                = "rds-sg"
+  name                = "rds-security-group"
   description         = "Allow PostgreSQL access"
   ingress_from_port   = 5432
   ingress_to_port     = 5432
   ingress_protocol    = "tcp"
   ingress_cidr_blocks = ["0.0.0.0/0"]
-  ec2_sg_id           = module.ec2_sg.security_group_id
-  depends_on          = [module.iam]
 }
+
 
 module "auth_db" {
   source                  = "./modules/rds"
