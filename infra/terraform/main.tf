@@ -13,9 +13,13 @@ module "ssm_role" {
 }
 
 module "ec2_sg" {
-  source  = "./modules/security_group/ec2"
-  vpc_id  = data.aws_vpc.default.id
-  # ✅ 다른 파라미터는 필요 없음: 규칙은 내부에서 고정
+  source              = "./modules/security_group"
+  name                = "ec2-sg"
+  description         = "Allow SSH access"
+  ingress_from_port   = 22
+  ingress_to_port     = 22
+  ingress_protocol    = "tcp"
+  ingress_cidr_blocks = ["0.0.0.0/0"]
 }
 
 module "rds_sg" {
