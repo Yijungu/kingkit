@@ -17,17 +17,6 @@ module "ec2_sg_v2" {
   vpc_id  = data.aws_vpc.default.id
 }
 
-
-module "ec2_sg" {
-  source              = "./modules/security_group/rds"
-  name                = "ec2-sg"
-  description         = "Allow SSH access"
-  ingress_from_port   = 22
-  ingress_to_port     = 22
-  ingress_protocol    = "tcp"
-  ingress_cidr_blocks = ["0.0.0.0/0"]
-}
-
 module "rds_sg_v2" {
   source     = "./modules/security_group/rds_v2"
   vpc_id     = data.aws_vpc.default.id
