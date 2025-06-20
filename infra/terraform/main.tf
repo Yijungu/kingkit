@@ -32,6 +32,12 @@ module "rds_sg" {
   ingress_cidr_blocks = ["0.0.0.0/0"]
 }
 
+module "rds_sg_v2" {
+  source     = "./modules/security_group/rds_v2"
+  vpc_id     = var.vpc_id
+  ec2_sg_id  = module.ec2_sg.security_group_id
+}
+
 
 module "auth_db" {
   source                  = "./modules/rds"
@@ -40,9 +46,9 @@ module "auth_db" {
   db_username             = var.db_username
   db_password             = var.db_password
 
-  # ✅ 두 SG를 동시에 붙임 (기존 + 신규)
   security_group_ids = [
-    module.rds_sg.security_group_id,    # 기존 (rds_sg)
+    module.rds_sg.security_group_id,  
+    module.rds_sg_v2.security_group_id
   ]
   depends_on        = [module.iam]
 }
