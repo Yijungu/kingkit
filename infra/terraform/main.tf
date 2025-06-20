@@ -47,7 +47,6 @@ module "auth_db" {
   db_password             = var.db_password
 
   security_group_ids = [
-    module.rds_sg.security_group_id,  
     module.rds_sg_v2.security_group_id
   ]
   depends_on        = [module.iam]
