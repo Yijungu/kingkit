@@ -67,6 +67,7 @@ module "ec2" {
   subnet_id            = data.aws_subnet.default.id
 
   security_group_ids = [
+    module.ec2_sg.security_group_id,
     module.ec2_sg_v2.security_group_id
   ]
   
