@@ -15,7 +15,6 @@ module "ssm_role" {
 module "ec2_sg_v2" {
   source  = "./modules/security_group/ec2"
   vpc_id  = data.aws_vpc.default.id
-  # ✅ 다른 파라미터는 필요 없음: 규칙은 내부에서 고정
 }
 
 
