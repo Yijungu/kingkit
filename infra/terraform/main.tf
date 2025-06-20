@@ -12,6 +12,13 @@ module "ssm_role" {
   depends_on  = [module.iam]
 }
 
+module "ec2_sg_v2" {
+  source  = "./modules/security_group/ec2"
+  vpc_id  = data.aws_vpc.default.id
+  # ✅ 다른 파라미터는 필요 없음: 규칙은 내부에서 고정
+}
+
+
 module "ec2_sg" {
   source              = "./modules/security_group/rds"
   name                = "ec2-sg"
@@ -58,7 +65,12 @@ module "ec2" {
   instance_type        = "t4g.nano"
   ami_id               = data.aws_ami.amazon_linux_2023_arm64.id
   subnet_id            = data.aws_subnet.default.id
-  security_group_id    = module.ec2_sg.security_group_id
+
+  security_group_ids = [
+    module.ec2_sg.security_group_id,
+    module.ec2_sg_v2.security_group_id
+  ]
+  
   iam_instance_profile = module.ssm_role.instance_profile_name
   depends_on           = [module.iam]
 }
