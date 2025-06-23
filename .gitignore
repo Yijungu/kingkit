@@ -45,3 +45,4 @@ node_modules/
 
 # 📄 GitHub Workflow Logs
 .github/workflows/*.log
+.gradle/
