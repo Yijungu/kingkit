@@ -52,4 +52,17 @@ class PaymentMethodTest {
         // then
         assertThat(method.isActivated()).isFalse();
     }
+
+    @Test
+    @DisplayName("create() 정적 팩토리는 필드를 채우고 활성화된 PaymentMethod를 반환한다")
+    void create_staticFactory_returnsActiveMethod() {
+        PaymentMethod method = PaymentMethod.create(10L, "key-123", "Visa", "****-****-****-1111");
+
+        assertThat(method.getUserId()).isEqualTo(10L);
+        assertThat(method.getBillingKey()).isEqualTo("key-123");
+        assertThat(method.getCardCompany()).isEqualTo("Visa");
+        assertThat(method.getCardNumberMasked()).isEqualTo("****-****-****-1111");
+        assertThat(method.isActive()).isTrue();
+        assertThat(method.getRegisteredAt()).isNotNull();
+    }
 }
