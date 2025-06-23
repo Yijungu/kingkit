@@ -4,7 +4,7 @@ variable "identifier" {
 
 variable "engine_version" {
   type    = string
-  default = "17.2"
+  default = "17.4"
 }
 
 variable "instance_class" {
