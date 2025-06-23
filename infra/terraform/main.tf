@@ -20,7 +20,7 @@ module "ec2_sg_v2" {
 module "rds_sg_v2" {
   source     = "./modules/security_group/rds_v2"
   vpc_id     = data.aws_vpc.default.id
-  ec2_sg_id  = module.ec2_sg.security_group_id
+  ec2_sg_id  = module.ec2_sg_v2.security_group_id
 }
 
 
