@@ -17,6 +17,7 @@
 - ✅ JWT 및 API-Key 인증 보안 구조 내장
 - ✅ 공통 DTO 및 테스트 유틸 분리 관리
 - ✅ GitHub Actions 기반 CI 파이프라인
+- ✅ Docker 기반 CD 파이프라인 제공
 - ✅ 실전형 예제 API 제공
 
 **5분 안에 로컬 실행이 가능합니다.**
@@ -42,8 +43,7 @@
 | `lib/`              | 공통 모듈 (`dto`, `security`, `test`) |
 | `examples/`         | 예제 서비스 (`todo-service`)          |
 | `infra/terraform/`  | AWS 인프라 코드                       |
-| `deployment/`       | Docker, Helm, GitHub Actions 설정     |
-| `monitoring/`       | Prometheus, Grafana, Alertmanager     |
+| `deployment/`       | Docker 이미지 및 GitHub Actions 스크립트 |
 | `docs/`             | 구조 및 규칙 문서                     |
 
 ---
@@ -63,7 +63,6 @@ kingkit/
 ├── infra/
 │ └── terraform/
 ├── deployment/
-├── monitoring/
 └── docs/
 
 
@@ -101,8 +100,8 @@ kingkit/
 | GitHub Actions   | 코드 변경 시 Terraform + 테스트 실행                |
 | Terraform        | AWS 인프라 자동 구성 (RDS, S3, IAM 등)              |
 | Docker / Helm    | 컨테이너 빌드 및 K8s 배포 지원                       |
-| Spring Services  | `auth`, `user`, `gateway`, `config-server`           |
-| Monitoring       | Prometheus + Grafana 구성                            |
+| Spring Services  | `auth`, `user`, `gateway`                            |
+| Monitoring       | (예정)                                              |
 | Database         | AWS RDS (PostgreSQL) 운영 대응                       |
 
 ---
@@ -143,3 +142,4 @@ PR 작성 전 docs/conventions.md를 꼭 확인해주세요.
 ## 📜 라이선스
 
 MIT License © Yijungu
+
