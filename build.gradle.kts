@@ -50,9 +50,11 @@ subprojects {
     if (project.file("src/main").exists()) {
         if (!isLibrary) {
             apply(plugin = "org.springframework.boot")
-            extensions.configure<JavaPluginExtension> {
-                toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-            }
+        }
+        extensions.configure<JavaPluginExtension> {
+            toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+        }
+        if (!isLibrary) {
             dependencies {
                 add("implementation", "org.springframework.boot:spring-boot-starter")
             }
