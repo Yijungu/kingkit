@@ -40,9 +40,12 @@ class BillingTriggerServiceTest {
 
     @BeforeEach
     void mockSaveReturns() {
-        when(paymentHistoryRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-        when(paymentFailureRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-        when(subscriptionRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        lenient().when(paymentHistoryRepository.save(any()))
+                .thenAnswer(i -> i.getArgument(0));
+        lenient().when(paymentFailureRepository.save(any()))
+                .thenAnswer(i -> i.getArgument(0));
+        lenient().when(subscriptionRepository.save(any()))
+                .thenAnswer(i -> i.getArgument(0));
     }
 
     private Subscription subscriptionWithMethod(boolean active) {
