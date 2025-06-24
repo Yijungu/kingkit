@@ -18,6 +18,29 @@ class PaymentResultTest {
     }
 
     @Test
+    void isSuccessFalseWhenPaymentKeyMissing() {
+        PaymentResult noKey = PaymentResult.successWithCheckoutUrl("url");
+        assertThat(noKey.isSuccess()).isFalse();
+
+        PaymentResult missing = PaymentResult.builder()
+                .status(PaymentResult.Status.SUCCESS)
+                .httpStatus(HttpStatus.OK)
+                .build();
+        assertThat(missing.isSuccess()).isFalse();
+    }
+
+    @Test
+    void isSuccessFalseWhenStatusFailedEvenWithKey() {
+        PaymentResult result = PaymentResult.builder()
+                .status(PaymentResult.Status.FAILED)
+                .paymentKey("key")
+                .httpStatus(HttpStatus.OK)
+                .build();
+
+        assertThat(result.isSuccess()).isFalse();
+    }
+
+    @Test
     void successFactoriesPopulateFields() {
         PaymentResult ok = PaymentResult.successWithPaymentKey("key");
         assertThat(ok.getStatus()).isEqualTo(PaymentResult.Status.SUCCESS);
