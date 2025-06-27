@@ -25,3 +25,10 @@ resource "aws_iam_policy" "ecr_push" {
   description = "ECR push permissions"
   policy      = file("${path.module}/../../policies/ecr-push.json")
 }
+
+resource "aws_iam_policy" "ssm_exec_policy" {
+  name   = "ssm-send-command-policy"
+  path        = "/"
+  description = "SSM send permissions"
+  policy = file("${path.module}/../../policies/ssm-exec-policy.json")
+}
