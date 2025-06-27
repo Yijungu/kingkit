@@ -59,6 +59,16 @@ jobs:
           docker tag $ECR_REPOSITORY:${{ github.sha }} ${{ steps.login-ecr.outputs.registry }}/${ECR_REPOSITORY}:${{ github.sha }}
           docker push ${{ steps.login-ecr.outputs.registry }}/${ECR_REPOSITORY}:${{ github.sha }}
 
+      - name: Upload deploy script
+        run: |
+          BASE64_SCRIPT=$(base64 -w0 deployment/scripts/deploy_ec2.sh)
+          aws ssm send-command \
+            --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
+            --document-name "AWS-RunShellScript" \
+            --comment "Upload deploy script" \
+            --parameters commands="bash -c 'echo $BASE64_SCRIPT | base64 -d > /home/ec2-user/deploy_ec2.sh && chmod +x /home/ec2-user/deploy_ec2.sh'" \
+            --output text
+
       - name: Deploy via SSM
         run: |
           aws ssm send-command \
