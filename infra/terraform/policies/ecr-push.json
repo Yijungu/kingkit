@@ -11,7 +11,8 @@
         "ecr:GetDownloadUrlForLayer",
         "ecr:InitiateLayerUpload",
         "ecr:PutImage",
-        "ecr:DescribeRepositories"
+        "ecr:DescribeRepositories",
+        "ecr:ListTagsForResource"
       ],
       "Resource": "*"
     }
