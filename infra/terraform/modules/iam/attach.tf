@@ -17,3 +17,8 @@ resource "aws_iam_user_policy_attachment" "user_attach_ecr_push" {
   user       = "terraform-github-actions"
   policy_arn = aws_iam_policy.ecr_push.arn
 }
+
+resource "aws_iam_user_policy_attachment" "user_attach_ssm_exec_policy" {
+  user       = "terraform-github-actions"
+  policy_arn = aws_iam_policy.ssm_exec_policy.arn
+}
