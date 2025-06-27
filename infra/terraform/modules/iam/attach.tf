@@ -12,3 +12,8 @@ resource "aws_iam_user_policy_attachment" "user_attach_iam_rds" {
   user       = "terraform-github-actions"
   policy_arn = aws_iam_policy.iam_rds.arn
 }
+
+resource "aws_iam_user_policy_attachment" "user_attach_ecr_push" {
+  user       = "terraform-github-actions"
+  policy_arn = aws_iam_policy.ecr_push.arn
+}
