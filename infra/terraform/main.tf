@@ -51,3 +51,23 @@ module "ec2" {
   iam_instance_profile = module.ssm_role.instance_profile_name
   depends_on           = [module.iam]
 }
+
+module "auth_service_ecr" {
+  source = "./modules/ecr"
+  name   = "auth-service"
+}
+
+module "user_service_ecr" {
+  source = "./modules/ecr"
+  name   = "user-service"
+}
+
+module "billing_service_ecr" {
+  source = "./modules/ecr"
+  name   = "billing-service"
+}
+
+module "gateway_ecr" {
+  source = "./modules/ecr"
+  name   = "gateway"
+}
