@@ -12,7 +12,8 @@
         "ecr:InitiateLayerUpload",
         "ecr:PutImage",
         "ecr:DescribeRepositories",
-        "ecr:ListTagsForResource"
+        "ecr:ListTagsForResource",
+        "ecr:UploadLayerPart"
       ],
       "Resource": "*"
     }
