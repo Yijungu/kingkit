@@ -18,3 +18,10 @@ resource "aws_iam_policy" "iam_rds" {
   description = "IAM, SSM, and RDS management permissions"
   policy      = file("${path.module}/../../policies/iam-ssm-rds.json")
 }
+
+resource "aws_iam_policy" "ecr_push" {
+  name        = "ecr-push"
+  path        = "/"
+  description = "ECR push permissions"
+  policy      = file("${path.module}/../../policies/ecr-push.json")
+}

@@ -9,7 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [auth-service, user-service, billing-service, gateway]
+        include:
+          - service: auth-service
+            module: core/auth-service
+            build_task: :core:auth-service:bootJar
+          - service: user-service
+            module: core/user-service
+            build_task: :core:user-service:bootJar
+          - service: billing-service
+            module: core/billing-service
+            build_task: :core:billing-service:bootJar
+          - service: gateway
+            module: gateway
+            build_task: :gateway:bootJar
     env:
       AWS_REGION: ap-northeast-2
       ECR_REPOSITORY: ${{ matrix.service }}
@@ -32,11 +44,11 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Build service JAR
-        run: ./gradlew :core:${{ matrix.service }}:bootJar
+        run: ./gradlew ${{ matrix.build_task }}
 
       - name: Build Docker image
         run: |
-          docker build -t $ECR_REPOSITORY:${{ github.sha }} ./core/${{ matrix.service }}
+          docker build -t $ECR_REPOSITORY:${{ github.sha }} ./${{ matrix.module }}
 
       - name: Login to ECR
         id: login-ecr
