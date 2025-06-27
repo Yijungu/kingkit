@@ -10,7 +10,8 @@
         "ecr:CompleteLayerUpload",
         "ecr:GetDownloadUrlForLayer",
         "ecr:InitiateLayerUpload",
-        "ecr:PutImage"
+        "ecr:PutImage",
+        "ecr:DescribeRepositories"
       ],
       "Resource": "*"
     }
